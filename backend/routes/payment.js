@@ -1,7 +1,11 @@
-const express = require('express');
+import express from 'express';
+import { authenticateToken } from '../middleware/auth.js';
+import {
+    constructStripeWebhookEvent,
+    createRentCheckoutSession
+} from '../services/stripe.js';
+
 const router = express.Router();
-const stripe = require('../config/stripe');
-const { authenticateToken } = require('../middleware/auth');
 
 router.get('/view', authenticateToken, async (req, res) => {
     const { userId, userRole } = req.query;
@@ -92,29 +96,13 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
 
         const paymentRecord = paymentResult.rows[0];
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'php',
-                        product_data: {
-                            name: `Rent Payment - ${property_name}`,
-                            description: `Period covered: ${period_covered}`,
-                        },
-                        unit_amount: Math.round(amount * 100),
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: 'payment',
-            success_url: `${process.env.FRONTEND_URL}/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.FRONTEND_URL}/?payment=cancel`,
-            metadata: {
-                payment_record_id: paymentRecord.id.toString(),
-                property_id: property_id.toString(),
-                tenant_id: actualTenantId.toString(),
-            },
+        const session = await createRentCheckoutSession({
+            amount,
+            propertyName: property_name,
+            periodCovered: period_covered,
+            paymentRecordId: paymentRecord.id,
+            propertyId: property_id,
+            tenantId: actualTenantId,
         });
 
         res.json({ url: session.url, payment_record_id: paymentRecord.id });
@@ -128,11 +116,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
     let event;
     try {
-        event = stripe.webhooks.constructEvent(
-            req.body,
-            sig,
-            process.env.STRIPE_WEBHOOK
-        );
+        event = constructStripeWebhookEvent(req.body, sig);
     } catch (err) {
         return res.status(400).json({ error: `Webhook error: ${err.message}` });
     }
@@ -220,4 +204,4 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

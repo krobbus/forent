@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import bcrypt from 'bcrypt';
+import { authenticateToken } from '../middleware/auth.js';
+
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const { authenticateToken } = require('../middleware/auth');
 
 const findUserByIdentifier = async (pool, identifier) => {
     const result = await pool.query(
@@ -213,4 +214,4 @@ router.patch('/:id/credentials', authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

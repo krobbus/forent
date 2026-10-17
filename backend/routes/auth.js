@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 router.post('/login', async (req, res) => {
     const { loginId, password } = req.body;
@@ -104,4 +105,4 @@ router.post('/logout', (req, res) => {
     res.json({ message: 'Logged out successfully' });
 });
 
-module.exports = router;
+export default router;

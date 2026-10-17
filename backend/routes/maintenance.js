@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { authenticateToken } from '../middleware/auth.js';
+
 const router = express.Router();
-const { authenticateToken } = require('../middleware/auth');
 
 router.get('/view', authenticateToken, async (req, res) => {
     const { userId, userRole } = req.query;
@@ -135,4 +136,4 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

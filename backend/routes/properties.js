@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { authenticateToken } from '../middleware/auth.js';
+
 const router = express.Router();
-const { authenticateToken } = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
     try {
@@ -138,4 +139,4 @@ router.patch('/:id/terminate', authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
