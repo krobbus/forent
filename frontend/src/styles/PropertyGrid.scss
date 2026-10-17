@@ -1,0 +1,216 @@
+#marketplaceContainer main{ min-height: 100vh; }
+.searchKeyword{ font-weight: bold; }
+
+#marketplaceContainer, #propertyContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: $gap;
+    margin: $margin;
+
+    main{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        
+        .propertyGrid{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin: $margin;
+            padding: $padding;
+            gap: 3vmin;
+
+            .propertyCard{
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                background: linear-gradient(#ffa20098, #ffa200);
+                color: $colorWhite;
+                border-radius: $borderRadius 0 $borderRadius $borderRadius;
+                max-width: 50vmin;
+
+                #priceLabel {
+                    position: absolute;
+                    top: -2vmin;
+                    right: -1vmin;
+                    display: flex;
+                    align-items: center;
+                    color: $colorWhite;
+                    background-color: $colorOrange;
+                    font-size: $normalSize;
+                    font-weight: bold;
+                    padding: 0.8vmin 1.5vmin;
+                    border-radius: $borderRadius 0 0 $borderRadius;
+                    z-index: 999;
+                    box-shadow: -0.3vmin 0.3vmin 0.8vmin rgba(0, 0, 0, 0.15);
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -0.5vmin;
+                        right: 0;
+                        border-left: 1vmin solid $colorOrange;
+                        border-bottom: 0.5vmin solid transparent;
+                    }
+                }
+
+                .galleryWrapper{
+                    position: relative;
+                    height: 30vmin;
+                    width: 100%;
+                    border-top-left-radius: $borderRadius;
+                    overflow: hidden;
+                    flex-shrink: 0;
+
+                    #statusLabel{              
+                        position: absolute;
+                        top: 2vmin;
+                        left: 2vmin;
+                        background: $colorWhite;
+                        color: $colorOrange;
+                        font-weight: bold;
+                        font-size: $smallSize;
+                        padding: 0.5vmin 0.9vmin;
+                        border-radius: 99px;
+                        pointer-events: none;
+                        backdrop-filter: blur(2px);
+                        line-height: 1.4;
+                    }
+                }
+
+                .propertyInfo{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: $gap;
+                    width: 100%;
+                    padding: $padding;
+                    padding-top: 0;
+                    text-align: center;
+
+                    h2{
+                        margin-top: $margin;
+                        font-size: $headerSize; 
+                    }
+
+                    p{ 
+                        font-size: $normalSize;
+                        font-style: italic; 
+                    }
+                }
+
+                .propertyDetails{
+                    display: flex;
+                    flex-direction: column;
+                    gap: $gap;
+                    padding: $padding;
+                    font-size: $smallSize;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.2);
+
+                    .detailSection{
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        width: 100%;
+
+                        .detailSectionLabel{
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 0.1em;
+                            opacity: 0.8;
+                            margin-bottom: 1vmin;
+                        }
+
+                        .pillRow{
+                            display: flex;
+                            flex-direction: row;
+                            flex-wrap: wrap;
+                            gap: 1vmin;
+
+                            .pill{
+                                background-color: $colorWhite;
+                                color: $colorOrange;
+                                padding: 0.8vmin 1.5vmin;
+                                border-radius: 999px;
+                                white-space: nowrap;
+                            }
+                        }
+                    }
+                }
+
+                .actionBtnWrapper{
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    align-items: center;
+                    gap: $gap;
+                    padding: $padding;
+
+                    button{
+                        flex: 1;
+                        padding: 2vmin 5vmin;
+                        border-radius: $borderRadius;
+                        white-space: nowrap;
+                        font-size: $smallSize;
+                        font-weight: bold;
+                        cursor: pointer;
+                        border: 0.3vmin solid;
+                        transition: $transition;
+                        min-width: fit-content;
+                    }
+
+                    .applyBtn, .updateBtn, .paymentBtn, .requestBtn{
+                        border-color: $colorWhite;
+                        background-color: $colorWhite;
+                        color: $colorOrange;
+
+                        &:hover{
+                            background-color: $colorOrange;
+                            color: $colorWhite;
+                        }
+                    }
+
+                    .detailBtn{
+                        background-color: $colorOrange;
+                        color: $colorWhite;
+
+                        &:hover{
+                            background-color: $colorWhite;
+                            color: $colorOrange;
+                        }
+                    }
+
+                    .deleteBtn, .terminateBtn{
+                        border-color: $colorRed;
+                        background-color: $colorRed;
+                        color: $colorWhite;
+
+                        &:hover{
+                            background-color: $colorWhite;
+                            color: $colorRed;
+                        }
+                    }
+
+                    .disabledBtn{
+                        background-color: $colorWhite;
+                        color: $colorGray;
+                        cursor: not-allowed;
+                        border-color: $colorGray;
+                        opacity: 0.6;
+                    }
+                }
+            }
+
+            @media (max-width: 1200px){ grid-template-columns: repeat(2, 1fr); }
+            @media (max-width: 768px) { grid-template-columns: 1fr; }
+        }
+    }
+}

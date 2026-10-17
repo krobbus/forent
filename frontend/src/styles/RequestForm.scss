@@ -1,0 +1,98 @@
+#applyMaintenanceContainer, #applyRentalContainer{
+    margin: $margin;
+
+    main{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: $gap;
+        width: 100%;
+
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: $gap;
+            color: $colorOrange;
+            padding: $padding;
+            width: 100%;
+
+            fieldset{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: $padding;
+                gap: $gap;
+                border: 0.5vmin dashed $colorLightOrange;
+                width: 100%;
+
+                legend{
+                    font-size: $subheaderSize;
+                    font-weight: bold;
+                    text-align: center;
+                    padding: 0 $padding 0 $padding;
+                }
+
+                .formGroup{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: flex-start;
+                    gap: $gap;
+                    max-width: 100vmin;
+                    width: 100%;
+
+                    label{
+                        font-size: $normalSize;
+                        font-weight: bold;
+                    }
+
+                    input, select, textarea{
+                        width: 100%;
+                        padding: 1vmin;
+                        border: 0.4vmin solid $colorOrange;
+                        color: $colorBlack;
+                        font-size: $smallSize;
+                        outline: none;
+                        transition: $transition;
+                        resize: vertical;
+
+                        &::placeholder{ opacity: 0.5; }
+
+                        .default{
+                            color: $colorGray;
+                            background-color: rgba(0, 0, 0, 0.1);
+                        }
+                    }
+
+                    input, select{ height: 5vmin; }
+
+                    .disabledInput{
+                        border: 0.4vmin solid $colorGray;
+                        background-color: rgba(0, 0, 0, 0.1);
+                        color: $colorGray;
+                        cursor: not-allowed;
+                    }
+                }
+
+                .verificationSection{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: $gap;
+
+                    .verificationNote{
+                        font-size: $smallSize;
+                        font-style: italic;
+                        text-align: center;
+                        color: $colorLightOrange;
+                    }
+                }
+            }
+        }
+    }
+}
