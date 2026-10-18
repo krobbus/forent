@@ -76,148 +76,190 @@ function Auth({ goBack, setUserRole, setUserId, onForgotPassword }: AuthProps){
     };
 
     return (
-        <section id='authContainer'>
-            <header>
-                <h2>{isLogin ? 'Log In' : 'Sign Up'}</h2>
+        <section id='authContainer' className={`fr-page container py-5 ${isLogin ? 'fr-narrow' : 'fr-medium'}`}>
+            <header className='fr-page-header'>
+                <span className='fr-badge-icon'><i className={`fa-solid ${isLogin ? 'fa-house-chimney' : 'fa-user-plus'}`} /></span>
+                <h2>{isLogin ? 'Welcome Back' : 'Create Your Account'}</h2>
                 <p>Please {isLogin ? 'log in' : 'sign up'} your account to continue</p>
             </header>
 
             <main>
                 <form onSubmit={handleSubmit}>
-                    <fieldset className='authField'>
-                        <legend>Account {isLogin ? 'Log In' : 'Sign Up Credentials'}</legend>
-                        
-                        <div id={!isLogin ? 'signup-username' : 'login-username'}>
-                            <label>{isLogin ? 'Email or Username' : 'Username'} <span>*</span></label>
-                            <input name={isLogin ? 'loginId' : 'username'} type='text' placeholder={isLogin ? 'Enter your email or username' : 'Enter your username'} autoComplete={isLogin ? 'loginId' : 'username'} onChange={handleChange} required />
+                    <div className='row g-4'>
+                        <div className={isLogin ? 'col-12' : 'col-md-6'}>
+                            <fieldset className='authField fr-fieldset'>
+                                <legend><i className='fa-solid fa-shield-halved' />Account {isLogin ? 'Log In' : 'Sign Up Credentials'}</legend>
+
+                                <div id={!isLogin ? 'signup-username' : 'login-username'} className='mb-3'>
+                                    <label htmlFor='usernameInput' className='form-label'>{isLogin ? 'Email or Username' : 'Username'} <span className='text-danger'>*</span></label>
+                                    <div className='input-group'>
+                                        <span className='input-group-text'><i className='fa-solid fa-user' /></span>
+                                        <input id='usernameInput' className='form-control' name={isLogin ? 'loginId' : 'username'} type='text' placeholder={isLogin ? 'Enter your email or username' : 'Enter your username'} autoComplete={isLogin ? 'loginId' : 'username'} onChange={handleChange} required />
+                                    </div>
+                                </div>
+
+                                {!isLogin && (
+                                    <div id='role' className='mb-3'>
+                                        <label htmlFor='roleInput' className='form-label'>Role <span className='text-danger'>*</span></label>
+                                        <div className='input-group'>
+                                            <span className='input-group-text'><i className='fa-solid fa-id-badge' /></span>
+                                            <select id='roleInput' className='form-select' name='role' onChange={handleChange} required>
+                                                <option value='' className="default">Select Role</option>
+                                                <option value='landlord'>Landlord</option>
+                                                <option value='tenant'>Tenant</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div id={!isLogin ? 'signup-password' : 'login-password'} className='mb-3'>
+                                    <label htmlFor='passwordInput' className='form-label'>Password <span className='text-danger'>*</span></label>
+                                    <div className='input-group'>
+                                        <span className='input-group-text'><i className='fa-solid fa-lock' /></span>
+                                        <input
+                                            id='passwordInput'
+                                            className='form-control'
+                                            name='password'
+                                            type={viewPassword ? 'text' : 'password'}
+                                            placeholder="Enter your password"
+                                            autoComplete={isLogin ? 'current-password' : 'new-password'}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <button type='button' className='btn btn-outline-secondary fr-toggle-eye' aria-label='Toggle password visibility' onClick={() => setViewPassword(prev => !prev)}>
+                                            <i className={`fa-solid m-0 ${viewPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {isLogin && <small className='text-secondary'>Forgot your password? <a className='fr-link' role='button' onClick={onForgotPassword}>Click here</a></small>}
+
+                                {!isLogin && (
+                                    <>
+                                        <div id='confirmPassword' className='mb-3'>
+                                            <label htmlFor='confirmPasswordInput' className='form-label'>Confirm Password <span className='text-danger'>*</span></label>
+                                            <div className='input-group'>
+                                                <span className='input-group-text'><i className='fa-solid fa-lock' /></span>
+                                                <input
+                                                    id='confirmPasswordInput'
+                                                    className='form-control'
+                                                    name='confirmPassword'
+                                                    type={viewConfirmPassword ? 'text' : 'password'}
+                                                    placeholder="Re-enter your password"
+                                                    autoComplete={isLogin ? 'current-password' : 'new-password'}
+                                                    onChange={handleChange}
+                                                    required
+                                                />
+                                                <button type='button' className='btn btn-outline-secondary fr-toggle-eye' aria-label='Toggle password visibility' onClick={() => setViewConfirmPassword(prev => !prev)}>
+                                                    <i className={`fa-solid m-0 ${viewConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div id='pin' className='mb-3'>
+                                            <label htmlFor='pinInput' className='form-label'>PIN <span className='text-danger'>*</span></label>
+                                            <div className='input-group'>
+                                                <span className='input-group-text'><i className='fa-solid fa-key' /></span>
+                                                <input
+                                                    id='pinInput'
+                                                    className='form-control'
+                                                    name='pin'
+                                                    type={viewPin ? 'text' : 'password'}
+                                                    placeholder="Enter your PIN"
+                                                    autoComplete='pin'
+                                                    onChange={handleChange}
+                                                    required
+                                                />
+                                                <button type='button' className='btn btn-outline-secondary fr-toggle-eye' aria-label='Toggle PIN visibility' onClick={() => setViewPin(prev => !prev)}>
+                                                    <i className={`fa-solid m-0 ${viewPin ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div id='confirmPin'>
+                                            <label htmlFor='confirmPinInput' className='form-label'>Confirm PIN <span className='text-danger'>*</span></label>
+                                            <div className='input-group'>
+                                                <span className='input-group-text'><i className='fa-solid fa-key' /></span>
+                                                <input
+                                                    id='confirmPinInput'
+                                                    className='form-control'
+                                                    name='confirmPin'
+                                                    type={viewConfirmPin ? 'text' : 'password'}
+                                                    placeholder="Re-enter your PIN"
+                                                    autoComplete='confirmPin'
+                                                    onChange={handleChange}
+                                                    required
+                                                />
+                                                <button type='button' className='btn btn-outline-secondary fr-toggle-eye' aria-label='Toggle PIN visibility' onClick={() => setViewConfirmPin(prev => !prev)}>
+                                                    <i className={`fa-solid m-0 ${viewConfirmPin ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </fieldset>
                         </div>
 
                         {!isLogin && (
-                            <div id='role'>
-                                <label>Role <span>*</span></label>
-                                <select name='role' onChange={handleChange} required>
-                                    <option value='' className="default">Select Role</option>
-                                    <option value='landlord'>Landlord</option>
-                                    <option value='tenant'>Tenant</option>
-                                </select>
+                            <div className='col-md-6'>
+                                <fieldset className='infoField fr-fieldset'>
+                                    <legend><i className='fa-solid fa-address-card' />Personal Information</legend>
+
+                                    <div className='row g-3'>
+                                        <div id='firstName' className='col-12'>
+                                            <label htmlFor='firstNameInput' className='form-label'>First Name <span className='text-danger'>*</span></label>
+                                            <input id='firstNameInput' className='form-control' name='firstName' type='text' placeholder="Enter your first name" autoComplete='firstName' onChange={handleChange} required />
+                                        </div>
+
+                                        <div id='middleName' className='col-12'>
+                                            <label htmlFor='middleNameInput' className='form-label'>Middle Name</label>
+                                            <input id='middleNameInput' className='form-control' name='middleName' type='text' placeholder="Enter your middle name" autoComplete='middleName' onChange={handleChange} />
+                                        </div>
+
+                                        <div id='lastName' className='col-sm-8'>
+                                            <label htmlFor='lastNameInput' className='form-label'>Last Name <span className='text-danger'>*</span></label>
+                                            <input id='lastNameInput' className='form-control' name='lastName' type='text' placeholder="Enter your last name" autoComplete='lastName' onChange={handleChange} required />
+                                        </div>
+
+                                        <div id='extName' className='col-sm-4'>
+                                            <label htmlFor='extensionInput' className='form-label'>Extension</label>
+                                            <input id='extensionInput' className='form-control' name='extension' type='text' placeholder="e.g. jr., III" autoComplete='extenstion' onChange={handleChange} />
+                                        </div>
+
+                                        <div id='email' className='col-12'>
+                                            <label htmlFor='emailInput' className='form-label'>Email <span className='text-danger'>*</span></label>
+                                            <div className='input-group'>
+                                                <span className='input-group-text'><i className='fa-solid fa-envelope' /></span>
+                                                <input id='emailInput' className='form-control' name='email' type='email' placeholder="e.g. XXXXXXX@XXXXX.com" autoComplete='email' onChange={handleChange} required />
+                                            </div>
+                                        </div>
+
+                                        <div id='contactNumber' className='col-12'>
+                                            <label htmlFor='contactNumberInput' className='form-label'>Contact Number</label>
+                                            <div className='input-group'>
+                                                <span className='input-group-text'><i className='fa-solid fa-phone' /></span>
+                                                <input id='contactNumberInput' className='form-control' name='contactNumber' type='text' placeholder="09XXXXXXXXX" autoComplete='contactNumber' onChange={handleChange} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
                         )}
-                        
-                        <div id={!isLogin ? 'signup-password' : 'login-password'}>              
-                            <label>Password <span>*</span></label>
-                            <input 
-                                name='password' 
-                                type={viewPassword ? 'text' : 'password'}
-                                placeholder="Enter your password"
-                                autoComplete={isLogin ? 'current-password' : 'new-password'}
-                                onChange={handleChange}
-                                required
-                            />
+                    </div>
 
-                            <i 
-                                className={`fa-solid ${viewPassword ? 'fa-eye-slash' : 'fa-eye'}`}
-                                onClick={() => setViewPassword(prev => !prev)}
-                            />
-                        </div>
-
-                        {isLogin && <small>Forgot your password? <a onClick={onForgotPassword}>Click here</a></small>}
-
-                        {!isLogin && (
-                            <>
-                                <div id='confirmPassword'>              
-                                    <label>Confirm Password <span>*</span></label>
-                                    <input 
-                                        name='confirmPassword' 
-                                        type={viewConfirmPassword ? 'text' : 'password'}
-                                        placeholder="Re-enter your password"
-                                        autoComplete={isLogin ? 'current-password' : 'new-password'}
-                                        onChange={handleChange}
-                                        required
-                                    />
-
-                                    <i 
-                                        className={`fa-solid ${viewConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}
-                                        onClick={() => setViewConfirmPassword(prev => !prev)}
-                                    />
-                                </div>
-
-                                <div id='pin'> 
-                                    <label>PIN <span>*</span></label>
-                                    <input
-                                        name='pin'
-                                        type={viewPin ? 'text' : 'password'}
-                                        placeholder="Enter your PIN"
-                                        autoComplete='pin'
-                                        onChange={handleChange}
-                                        required
-                                    />
-
-                                    <i 
-                                        className={`fa-solid ${viewPin ? 'fa-eye-slash' : 'fa-eye'}`}
-                                        onClick={() => setViewPin(prev => !prev)}
-                                    />
-                                </div>
-
-                                <div id='confirmPin'> 
-                                    <label>Confirm PIN <span>*</span></label>
-                                    <input
-                                        name='confirmPin'
-                                        type={viewConfirmPin ? 'text' : 'password'}
-                                        placeholder="Re-enter your PIN"
-                                        autoComplete='confirmPin'
-                                        onChange={handleChange}
-                                        required
-                                    />
-
-                                    <i 
-                                        className={`fa-solid ${viewConfirmPin ? 'fa-eye-slash' : 'fa-eye'}`}
-                                        onClick={() => setViewConfirmPin(prev => !prev)}
-                                    />
-                                </div>
-                            </>
-                        )}
-                    </fieldset>
-                    
-                    {!isLogin && (
-                        <fieldset className='infoField'>
-                            <legend>Personal Information</legend>
-
-                            <div id='firstName'>
-                                <label>First Name <span>*</span></label>
-                                <input name='firstName' type='text' placeholder="Enter your first name" autoComplete='firstName' onChange={handleChange} required />
-                            </div>
-
-                            <div id='middleName'>
-                                <label>Middle Name</label>
-                                <input name='middleName' type='text' placeholder="Enter your middle name" autoComplete='middleName' onChange={handleChange} />
-                            </div>
-
-                            <div id='lastName'>
-                                <label>Last Name <span>*</span></label>
-                                <input name='lastName' type='text' placeholder="Enter your last name" autoComplete='lastName' onChange={handleChange} required />
-                            </div>
-
-                            <div id='extName'>
-                                <label>Extension</label>
-                                <input name='extension' type='text' placeholder="e.g. jr., sr., III" autoComplete='extenstion' onChange={handleChange} />
-                            </div>
-                            
-                            <div id='email'>
-                                <label>Email <span>*</span></label>
-                                <input name='email' type='email' placeholder="e.g. XXXXXXX@XXXXX.com" autoComplete='email' onChange={handleChange} required />
-                            </div>
-                            
-                            <div id='contactNumber'>
-                                <label>Contact Number</label>
-                                <input name='contactNumber' type='text' placeholder="09XXXXXXXXX" autoComplete='contactNumber' onChange={handleChange} />
-                            </div>
-                        </fieldset>
-                    )}
-                    
-                    <section className='btnWrapper'>
-                        <button className='authBtn' type='submit'>{isLogin ? 'Login' : 'Register'}</button>
-                        <button className='switchBtn' type='button' onClick={() => setIsLogin(!isLogin)}>Switch to {isLogin ? 'Registration' : 'Login'}</button>
-                        <button className='backBtn' type='button' onClick={goBack}>Go Back</button>
+                    <section className='btnWrapper d-grid gap-2 col-md-8 col-lg-6 mx-auto mt-4'>
+                        <button className='authBtn btn btn-primary btn-lg' type='submit'>
+                            <i className={`fa-solid ${isLogin ? 'fa-right-to-bracket' : 'fa-user-check'}`} />
+                            {isLogin ? 'Login' : 'Register'}
+                        </button>
+                        <button className='switchBtn btn btn-outline-primary' type='button' onClick={() => setIsLogin(!isLogin)}>
+                            <i className='fa-solid fa-repeat' />
+                            Switch to {isLogin ? 'Registration' : 'Login'}
+                        </button>
+                        <button className='backBtn btn btn-link text-secondary text-decoration-none' type='button' onClick={goBack}>
+                            <i className='fa-solid fa-arrow-left' />
+                            Go Back
+                        </button>
                     </section>
                 </form>
             </main>
