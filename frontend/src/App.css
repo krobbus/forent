@@ -731,3 +731,117 @@ body {
     .fr-listing-actions .btn { flex: 1 1 100%; }
     .propertySearchWrapper { margin-inline: .75rem; }
 }
+
+/* ---------- FoRent editorial polish ---------- */
+:root {
+    --fr-orange-deep: #9a3412;
+    --fr-surface: #fffaf5;
+    --fr-shadow-soft: 0 18px 50px rgba(154, 52, 18, .09);
+}
+
+html { scroll-behavior: smooth; }
+body { background: #fff; letter-spacing: -.01em; }
+button, a, input, select, textarea { transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease, transform .2s ease; }
+
+.navbar {
+    min-height: 4.75rem;
+    padding-inline: clamp(1rem, 5vw, 5rem);
+    border-bottom-color: rgba(241, 228, 216, .8);
+    box-shadow: 0 8px 30px rgba(74, 41, 19, .05);
+}
+.navTitle h2 { font-size: 1.6rem; letter-spacing: -.045em; }
+.navTitle img { filter: drop-shadow(0 5px 10px rgba(234, 88, 12, .18)); }
+.navbar li a { padding: .6rem .8rem; }
+.navbar li a:hover { transform: translateY(-1px); }
+
+.headerWrapper {
+    position: relative;
+    overflow: hidden;
+    min-height: 430px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+}
+.headerWrapper::before, .headerWrapper::after {
+    content: '';
+    position: absolute;
+    border-radius: 999px;
+    background: rgba(251, 146, 60, .13);
+    z-index: -1;
+}
+.headerWrapper::before { width: 22rem; height: 22rem; top: -13rem; left: -5rem; }
+.headerWrapper::after { width: 28rem; height: 28rem; right: -12rem; bottom: -17rem; background: rgba(234, 88, 12, .08); }
+.headerWrapper h1 { font-size: clamp(3.6rem, 10vw, 7.25rem); text-shadow: 0 12px 28px rgba(234, 88, 12, .12); }
+.headerWrapper h2 { max-width: 34rem; line-height: 1.55; }
+.headerBtnWrapper button { min-height: 3rem; padding-inline: 1.4rem; }
+
+.fr-page { width: min(100% - 2rem, 1100px); }
+.fr-page-header { margin-bottom: 2.75rem; }
+.fr-page-header .fr-badge-icon { width: 4rem; height: 4rem; border: 5px solid #fff7ed; outline: 1px solid #fed7aa; }
+.fr-page-header h2 { font-size: clamp(2rem, 4vw, 2.65rem); letter-spacing: -.045em; }
+.fr-page-header p { max-width: 42rem; margin-inline: auto; line-height: 1.7; }
+
+.fr-card, .fr-fieldset, .propertySearchWrapper {
+    border-color: #f3e4d5;
+    box-shadow: var(--fr-shadow-soft);
+}
+.fr-fieldset { padding: clamp(1.25rem, 3vw, 2rem); }
+.fr-fieldset legend { background: #fff; letter-spacing: -.02em; }
+.form-label { letter-spacing: .01em; }
+.form-control, .form-select, .input-group-text { min-height: 2.85rem; }
+.form-control, .form-select { background: #fffdfb; }
+.form-control:hover, .form-select:hover { border-color: #fdba74; }
+.btn { min-height: 2.8rem; padding-inline: 1rem; }
+.btn-primary { border: 0; background-image: linear-gradient(135deg, #fb923c, #ea580c); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(234, 88, 12, .22); }
+.btn-outline-primary:hover { transform: translateY(-1px); }
+
+/* A readable, vertical rental catalogue */
+#marketplaceContainer { padding-top: clamp(2.5rem, 6vw, 5rem); }
+.propertySearchWrapper { padding: 1.15rem; background: rgba(255, 250, 245, .78); }
+.propertySearchWrapper .searchBar > input { background-color: #fff; min-height: 3rem; }
+.propertyCard { border-radius: 1.25rem; }
+.propertyCard > .row { gap: 0; }
+.propertyCard .fr-listing-media { min-height: 290px; height: 290px; }
+.propertyCard .fr-listing-media img { transition: transform .5s ease; }
+.propertyCard:hover .fr-listing-media img { transform: scale(1.035); }
+.propertyCard > .row > div:last-child { padding: clamp(1.25rem, 3vw, 2rem) !important; }
+.fr-listing-price { font-size: 1.8rem; }
+.fr-listing-title { font-size: 1.45rem; letter-spacing: -.035em; }
+.fr-listing-stats { padding: .8rem 0; border-top: 1px solid #f6ede6; border-bottom: 1px solid #f6ede6; }
+.fr-listing-actions { border-top-style: solid; }
+.pill { background: #fff7ed; border-color: #fed7aa; }
+
+/* Forms feel like calm, guided workflows */
+#applyRentalContainer, #applyMaintenanceContainer, #authContainer { max-width: 980px; }
+#applyRentalContainer .fr-card, #applyMaintenanceContainer .fr-card { overflow: hidden; }
+#applyRentalContainer form, #applyMaintenanceContainer form, #authContainer form { position: relative; }
+#applyRentalContainer .btnWrapper, #applyMaintenanceContainer .btnWrapper, #authContainer .btnWrapper { margin-top: 2rem !important; }
+#authContainer { max-width: 860px; }
+#authContainer .fr-page-header { margin-bottom: 2rem; }
+#authContainer .authField { max-width: 560px; margin-inline: auto; }
+
+/* Maintenance dashboard */
+#maintenanceRequestsContainer { max-width: 1200px; }
+#maintenanceRequestsContainer .tableWrapper { border-radius: 1.25rem; }
+#maintenanceRequestsContainer .tableWrapper > .d-flex { background: #fffaf5; padding-block: 1.15rem !important; }
+#maintenanceRequestsContainer .tableWrapper > .d-flex .fw-semibold { letter-spacing: -.02em; }
+.fr-table thead th { background: #fff7ed; padding-block: 1rem; }
+.fr-table tbody tr { border-color: #f7eee7; }
+.fr-table tbody tr:hover { --bs-table-hover-bg: #fffaf5; }
+.fr-table tbody td { padding-block: 1rem; }
+
+@media (min-width: 768px) {
+    .propertyCard .fr-listing-media { min-height: 320px; height: 320px; }
+}
+
+@media (max-width: 640px) {
+    .navbar { min-height: 4rem; }
+    .welcomeWrapper { display: none; }
+    .headerWrapper { min-height: 390px; }
+    .fr-page { width: min(100% - 1.25rem, 1100px); }
+    .fr-page-header { margin-bottom: 2rem; }
+    #maintenanceRequestsContainer .tableWrapper > .d-flex { padding-inline: 1rem !important; }
+}
