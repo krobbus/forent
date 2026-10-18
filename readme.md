@@ -31,7 +31,7 @@ FoRent is a full-stack web application for managing rental properties. It connec
 ### Frontend
 - React with TypeScript
 - Vite
-- SCSS for styling
+- Bootstrap
 - Font Awesome for icons
 - Stripe.js for payment processing
 - Deployed on Vercel
@@ -44,6 +44,13 @@ FoRent is a full-stack web application for managing rental properties. It connec
 - Stripe for payment webhooks
 - cookie-parser for httpOnly cookie management
 - Deployed on Render
+
+### Backend Structure
+- `backend/server.js` starts the HTTP server; `backend/app.js` configures Express middleware.
+- `backend/api/` mounts the API route modules in `backend/routes/`.
+- `backend/database/` configures the PostgreSQL connection pool.
+- `backend/config/stripe.js` configures Stripe, while `backend/services/stripe.js` contains Stripe payment operations.
+- `backend/middleware/database.js` provides the database pool to API requests.
 
 ## Getting Started
 
@@ -111,7 +118,5 @@ FoRent is a full-stack web application for managing rental properties. It connec
 3. Provide a reason for termination and confirm
 4. The property status will return to available after confirmation
 
-
 ## License
-
 This project is for educational and portfolio purposes.
