@@ -3,7 +3,7 @@ import { getUserFromToken } from './utils/auth';
 import type { Role, Crumb, ProfileDataProps } from './utils/props';
 import { authFetch } from './utils/api';
 
-import '../src/App.scss';
+import '../src/App.css';
 import Auth from './pages/Auth';
 import Marketplace from './pages/Marketplace';
 import Properties from './pages/Properties';
