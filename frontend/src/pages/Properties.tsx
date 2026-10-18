@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { authFetch } from '../utils/api';
 import type { PropertyDataProps, PropertiesProps, FilterState } from '../utils/props';
-import PropertyGallery from '../component/PropertyGallery';
 import { usePropertySearch, defaultFilters } from '../utils/filter';
 import { usePagination } from '../utils/pagination';
 
-import PropertySearch from '../component/PropertySearch';
-import Pagination from '../component/Pagination';
+import PropertyGallery from '../components/PropertyGallery';
+import PropertySearch from '../components/PropertySearch';
+import Pagination from '../components/Pagination';
 
 function Properties({ goBack, userId, userRole,  onViewDetails, onCreateRequest, onUpdateProperty, onViewPayment, onTerminateLease }: PropertiesProps) {
     const [properties, setProperties] = useState<PropertyDataProps[]>([]);

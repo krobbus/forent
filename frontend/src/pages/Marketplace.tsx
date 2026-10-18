@@ -4,9 +4,9 @@ import type { MarketplaceProps, PropertyDataProps, RentalApplicationDataProps, F
 import { usePropertySearch, defaultFilters } from '../utils/filter';
 import { usePagination } from '../utils/pagination';
 
-import PropertyGallery from '../component/PropertyGallery';
-import PropertySearch from '../component/PropertySearch';
-import Pagination from '../component/Pagination';
+import PropertyGallery from '../components/PropertyGallery';
+import PropertySearch from '../components/PropertySearch';
+import Pagination from '../components/Pagination';
 
 function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onViewRentalApplications }: MarketplaceProps) {
     const [loading, setLoading] = useState(true);
@@ -82,6 +82,10 @@ function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onVie
         const fetchProperties = async () => {
             try {
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/api/properties`);
+                if (!response.ok) {
+                    throw new Error(`Properties request failed with status ${response.status}`);
+                }
+
                 const data = await response.json();
                 setProperties(Array.isArray(data) ? data : []);
             } catch (error) {

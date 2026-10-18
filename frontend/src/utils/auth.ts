@@ -1,8 +1,13 @@
 import type { Role } from './props';
 
 interface TokenPayload {
+    authenticated: true;
     id: number;
     role: Role;
+}
+
+interface UnauthenticatedPayload {
+    authenticated: false;
 }
 
 export const getUserFromToken = async (): Promise<{ userId: number; userRole: Role } | null> => {
@@ -12,7 +17,9 @@ export const getUserFromToken = async (): Promise<{ userId: number; userRole: Ro
         });
 
         if (!res.ok) return null;
-        const data: TokenPayload = await res.json();
+        const data: TokenPayload | UnauthenticatedPayload = await res.json();
+        if (!data.authenticated) return null;
+
         return { userId: data.id, userRole: data.role };
     } catch {
         return null;

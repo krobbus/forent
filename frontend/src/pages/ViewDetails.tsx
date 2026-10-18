@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { authFetch } from '../utils/api';
 import type { PropertyDataProps, RentalApplicationDataProps, ViewDetailsProps } from '../utils/props';
-import PropertyGallery from '../component/PropertyGallery';
+import PropertyGallery from '../components/PropertyGallery';
 
 function ViewDetails({ goBack, userRole, userId, property, showHeader, showActions = true, onViewApplyRental, onViewRentalApplications, onTerminateLease }: ViewDetailsProps) {
     const [loading, setLoading] = useState(true);

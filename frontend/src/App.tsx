@@ -3,20 +3,7 @@ import { getUserFromToken } from './utils/auth';
 import type { Role, Crumb, ProfileDataProps } from './utils/props';
 import { authFetch } from './utils/api';
 
-import '../src/styles/App.scss';
-import '../src/styles/Paginated.scss';
-import '../src/styles/Auth.scss';
-import '../src/styles/PropertySearch.scss';
-import '../src/styles/PropertyGallery.scss';
-import '../src/styles/PropertyGrid.scss';
-import '../src/styles/PropertyForm.scss';
-import '../src/styles/TerminateLease.scss';
-import '../src/styles/ViewDetails.scss';
-import '../src/styles/ViewProfile.scss';
-import '../src/styles/UpdateProfile.scss';
-import '../src/styles/TableView.scss';
-import '../src/styles/RequestForm.scss';
-
+import '../src/App.css';
 import Auth from './pages/Auth';
 import Marketplace from './pages/Marketplace';
 import Properties from './pages/Properties';
@@ -37,18 +24,19 @@ function NavCrumb({ crumbs }: { crumbs: Crumb[] }) {
   if (crumbs.length === 0) return null;
 
   return (
-    <div className='navCrumb'>
-      {crumbs.map((crumb, i) => (
-        <span key={i}>
-          {i > 0 && <em>&gt;</em>}
-          
-          {crumb.onClick
-            ? <a className='backCrumb' onClick={crumb.onClick}>{crumb.label}</a>
-            : <span className='activeCrumb'>{crumb.label}</span>
-          }
-        </span>
-      ))}
-    </div>
+    <nav aria-label="breadcrumb" className="py-3 px-4 bg-white border-bottom mb-4">
+      <ol className="breadcrumb mb-0">
+        {crumbs.map((crumb, i) => (
+          <li key={i} className={`breadcrumb-item ${i === crumbs.length - 1 ? 'active text-dark fw-semibold' : ''}`}>
+            {crumb.onClick ? (
+              <a role="button" className="text-decoration-none text-primary" onClick={crumb.onClick}>{crumb.label}</a>
+            ) : (
+              <span>{crumb.label}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
   );
 }
 

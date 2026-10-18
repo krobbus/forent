@@ -1,4 +1,5 @@
-import stripe from '../config/stripe.js';
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const createRentCheckoutSession = ({
     amount,

@@ -81,18 +81,14 @@ router.post('/register', async (req, res) => {
 
 router.get('/me', (req, res) => {
     const token = req.cookies?.token;
-    
-    if (!token) return res.status(401).json({ error: 'Not authenticated', code: 'NO_TOKEN' });
+
+    if (!token) return res.json({ authenticated: false });
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_KEY);
-        res.json({ id: decoded.id, role: decoded.role });
-    } catch (err) {
-        const isExpired = err.name === 'TokenExpiredError';
-        res.status(403).json({
-            error: isExpired ? 'Token expired' : 'Invalid token',
-            code: isExpired ? 'TOKEN_EXPIRED' : 'INVALID_TOKEN'
-        });
+        res.json({ authenticated: true, id: decoded.id, role: decoded.role });
+    } catch {
+        res.json({ authenticated: false });
     }
 });
 
