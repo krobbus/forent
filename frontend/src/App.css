@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 *{
     margin: 0;
     padding: 0;
@@ -661,3 +663,71 @@ body {
 }
 
 .lightboxThumb.active { opacity: 1; border-color: var(--fr-orange-500); }
+
+/* ---------- Shared Tailwind-ready shell ---------- */
+#root { min-height: 100vh; }
+
+.navbar {
+    min-height: 4.5rem;
+    padding: .75rem clamp(1rem, 4vw, 3.5rem);
+    background: rgba(255, 255, 255, .94);
+    border-bottom: 1px solid var(--fr-border);
+    box-shadow: 0 .25rem 1.25rem rgba(194, 65, 12, .06);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(14px);
+}
+.navbarHeader { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex: 1; }
+.titleText { display: flex; align-items: center; gap: .9rem; }
+.titleText > i { display: none; cursor: pointer; color: var(--fr-orange-600); }
+.navTitle { display: flex; align-items: center; gap: .6rem; }
+.navTitle img { width: 2.25rem; height: 2.25rem; object-fit: contain; }
+.navTitle h2 { margin: 0; font-family: var(--fr-font-heading); font-size: 1.45rem; color: var(--fr-ink); }
+.welcomeWrapper { display: flex; flex-direction: column; gap: .1rem; color: var(--fr-muted); font-size: .78rem; text-align: right; }
+.welcomeWrapper span:last-child { color: var(--fr-ink); font-size: .9rem; font-weight: 700; }
+.navbar ul { display: flex; align-items: center; gap: .35rem; list-style: none; margin: 0; padding: 0; }
+.navbar li { display: flex; align-items: center; gap: .45rem; }
+.navbar li i { color: var(--fr-orange-500); font-size: .85rem; }
+.navbar li a { color: var(--fr-muted); cursor: pointer; padding: .55rem .7rem; border-radius: .6rem; font-size: .84rem; font-weight: 600; text-decoration: none; }
+.navbar li a:hover { color: var(--fr-orange-700); background: var(--fr-orange-50); }
+
+.headerWrapper { padding: clamp(4rem, 10vw, 8rem) 1.25rem clamp(3rem, 8vw, 6rem); text-align: center; background: linear-gradient(135deg, #fff7ed 0%, #fff 58%, #ffedd5 100%); border-bottom: 1px solid var(--fr-border); }
+.headerWrapper h1 { font-family: var(--fr-font-heading); font-size: clamp(3rem, 8vw, 6rem); line-height: 1; color: var(--fr-orange-600); letter-spacing: -.04em; }
+.headerWrapper h2 { margin: 1rem 0 1.75rem; color: var(--fr-ink); font-size: clamp(1rem, 2vw, 1.35rem); font-weight: 500; }
+.headerBtnWrapper { display: flex; justify-content: center; flex-wrap: wrap; gap: .75rem; }
+.headerBtnWrapper button { border: 1px solid var(--fr-orange-500); border-radius: .7rem; padding: .75rem 1.1rem; color: var(--fr-orange-700); background: #fff; font-weight: 700; cursor: pointer; transition: .2s ease; }
+.headerBtnWrapper button:last-child, .headerBtnWrapper button:hover { background: var(--fr-orange-500); color: #fff; box-shadow: 0 .5rem 1.2rem rgba(249, 115, 22, .22); }
+
+/* Listings are intentionally stacked: image, then readable property details. */
+.propertyCard > .row { display: flex; flex-direction: column; }
+.propertyCard > .row > [class*='col-'] { width: 100%; max-width: none; }
+.propertyCard .fr-listing-media { min-height: 250px; height: 250px; }
+.propertyCard .fr-listing-media .propertyGallery, .propertyCard .fr-listing-media .galleryItem { position: absolute; }
+.propertyCard .fr-listing-actions { justify-content: flex-start; }
+
+#authContainer, #applyRentalContainer, #applyMaintenanceContainer, #maintenanceRequestsContainer { padding-top: clamp(2rem, 5vw, 4rem) !important; padding-bottom: 4rem !important; }
+#authContainer .fr-fieldset, #applyRentalContainer .fr-fieldset, #applyMaintenanceContainer .fr-fieldset { padding: clamp(1.1rem, 3vw, 1.75rem); }
+#authContainer form, #applyRentalContainer form, #applyMaintenanceContainer form { color: var(--fr-ink); }
+#authContainer .btn, #applyRentalContainer .btn, #applyMaintenanceContainer .btn, #maintenanceRequestsContainer .btn { min-height: 2.75rem; }
+#maintenanceRequestsContainer .tableWrapper { box-shadow: var(--fr-shadow); }
+#maintenanceRequestsContainer .table-responsive { border-radius: 0 0 var(--fr-radius) var(--fr-radius); }
+
+@media (max-width: 900px) {
+    .navbar { flex-wrap: wrap; }
+    .titleText > i { display: block; }
+    .navbar ul { display: none; width: 100%; flex-direction: column; align-items: stretch; padding-top: .5rem; }
+    .navbar ul.show { display: flex; }
+    .navbar li a { display: block; }
+    .welcomeWrapper { margin-left: auto; }
+}
+
+@media (max-width: 576px) {
+    .fr-page-header h2 { font-size: 1.7rem; }
+    .fr-listing-media { min-height: 210px !important; height: 210px !important; }
+    .fr-listing-actions .btn { flex: 1 1 100%; }
+    .propertySearchWrapper { margin-inline: .75rem; }
+}
