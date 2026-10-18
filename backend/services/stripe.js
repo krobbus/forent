@@ -24,8 +24,8 @@ export const createRentCheckoutSession = ({
         },
     ],
     mode: 'payment',
-    success_url: `${process.env.FRONTEND_URL}/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.FRONTEND_URL}/?payment=cancel`,
+    success_url: `${process.env.NODE_ENV === "production" ? "http://127.0.0.1:5173" : "https://forent-backend.onrender.com"}/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.NODE_ENV === "production" ? "http://127.0.0.1:5173" : "https://forent-backend.onrender.com"}/?payment=cancel`,
     metadata: {
         payment_record_id: paymentRecordId.toString(),
         property_id: propertyId.toString(),
