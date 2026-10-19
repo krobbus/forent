@@ -57,67 +57,86 @@ function ViewProfile({ goBack, userRole, userId, onUpdateProfile }: ViewProfileP
     };
 
     return (
-        <section id='viewProfileContainer'>
-            <header>
-                <h2>My Profile</h2>
-                <p>Review your account details and personal information on file.</p>
+        <section id='viewProfileContainer' className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8 font-[family-name:var(--font-body)] text-[var(--text)] sm:px-6">
+            <header className="relative overflow-hidden rounded-2xl bg-[url('/Background.png')] bg-cover bg-center">
+                <div className="absolute inset-0 bg-orange-600/70" />
+
+                <div className="relative flex flex-col gap-2 px-6 py-10 sm:px-10">
+                    <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-white sm:text-3xl">My Profile</h2>
+                    <p className="max-w-2xl text-sm text-orange-50 sm:text-base">Review your account details and personal information on file.</p>
+                </div>
             </header>
 
-            <main>
+            <main className="flex flex-col gap-6">
                 {loading ? (
-                    <p className='loadingText'>Loading profile...</p>
+                    <p className="py-12 text-center text-sm text-gray-500">Loading profile...</p>
                 ) : (
                     <>
-                        <fieldset>
-                            <legend>Account Details</legend>
+                        <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                            <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Account Details</legend>
 
-                            <div className='columnGroup'>
-                                <div className='rowGroup'>
-                                    <strong>Member Since:</strong>
-                                    <p>{user?.created_at ? formatDate(user.created_at) : 'N/A'}</p>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex flex-col gap-0.5 border-b border-orange-100 pb-3 sm:flex-row sm:items-center sm:gap-4">
+                                    <strong className="text-sm font-semibold text-gray-700 sm:w-44">Member Since:</strong>
+                                    <p className="text-sm text-[var(--text)]">{user?.created_at ? formatDate(user.created_at) : 'N/A'}</p>
                                 </div>
 
-                                <div className='rowGroup'>
-                                    <strong>Username:</strong>
-                                    <p>{user?.username || 'N/A'}</p>
+                                <div className="flex flex-col gap-0.5 border-b border-orange-100 pb-3 sm:flex-row sm:items-center sm:gap-4">
+                                    <strong className="text-sm font-semibold text-gray-700 sm:w-44">Username:</strong>
+                                    <p className="text-sm text-[var(--text)]">{user?.username || 'N/A'}</p>
                                 </div>
 
-                                <div className='rowGroup'>
-                                    <strong>Role:</strong>
-                                    <p>{user?.role ? user?.role.charAt(0).toUpperCase() + user?.role.slice(1) : 'N/A'}</p>
+                                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-4">
+                                    <strong className="text-sm font-semibold text-gray-700 sm:w-44">Role:</strong>
+                                    <p className="text-sm text-[var(--text)]">{user?.role ? user?.role.charAt(0).toUpperCase() + user?.role.slice(1) : 'N/A'}</p>
                                 </div>
                             </div>
                         </fieldset>
 
-                        <fieldset>
-                            <legend>{userRole === 'landlord' ? 'Landlord' : 'Tenant'} Information</legend>
+                        <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                            <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">{userRole === 'landlord' ? 'Landlord' : 'Tenant'} Information</legend>
 
-                            <div className='columnGroup'>
-                                <div className='rowGroup'>
-                                    <strong>Account ID:</strong>
-                                    <p>{profile?.user_id || 'N/A'}</p>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex flex-col gap-0.5 border-b border-orange-100 pb-3 sm:flex-row sm:items-center sm:gap-4">
+                                    <strong className="text-sm font-semibold text-gray-700 sm:w-44">Account ID:</strong>
+                                    <p className="text-sm text-[var(--text)]">{profile?.user_id || 'N/A'}</p>
                                 </div>
                                 
-                                <div className='rowGroup'>
-                                    <strong>Full Name:</strong>
-                                    <p>{profile?.first_name || ''} {profile?.middle_name || ''} {profile?.last_name || ''} {profile?.ext_name || ''}</p>
+                                <div className="flex flex-col gap-0.5 border-b border-orange-100 pb-3 sm:flex-row sm:items-center sm:gap-4">
+                                    <strong className="text-sm font-semibold text-gray-700 sm:w-44">Full Name:</strong>
+                                    <p className="text-sm text-[var(--text)]">{profile?.first_name || ''} {profile?.middle_name || ''} {profile?.last_name || ''} {profile?.ext_name || ''}</p>
                                 </div>
 
-                                <div className='rowGroup'>
-                                    <strong>Email:</strong>
-                                    <p>{profile?.email || 'N/A'}</p>
+                                <div className="flex flex-col gap-0.5 border-b border-orange-100 pb-3 sm:flex-row sm:items-center sm:gap-4">
+                                    <strong className="text-sm font-semibold text-gray-700 sm:w-44">Email:</strong>
+                                    <p className="text-sm text-[var(--text)]">{profile?.email || 'N/A'}</p>
                                 </div>
 
-                                <div className='rowGroup'>
-                                    <strong>Contact Number:</strong>
-                                    <p>{profile?.contact_num || 'N/A'}</p>
+                                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-4">
+                                    <strong className="text-sm font-semibold text-gray-700 sm:w-44">Contact Number:</strong>
+                                    <p className="text-sm text-[var(--text)]">{profile?.contact_num || 'N/A'}</p>
                                 </div>
                             </div>
                         </fieldset>
 
-                        <div className="btnWrapper">
-                            <button type="button" className="modifyBtn" onClick={() => onUpdateProfile()}>Modify Details</button>
-                            <button type="button" className="backBtn" onClick={goBack}>Go Back</button>
+                        <div className="flex flex-wrap gap-3">
+                            <button
+                                type="button"
+                                onClick={() => onUpdateProfile()}
+                                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                                <i className="fa-solid fa-pen-to-square" />
+                                Modify Details
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={goBack}
+                                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                            >
+                                <i className="fa-solid fa-arrow-left" />
+                                Go Back
+                            </button>
                         </div>
                     </>
                 )}

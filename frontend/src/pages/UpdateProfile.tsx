@@ -4,20 +4,25 @@ import type { UpdateProfileProps, Step } from '../utils/props'
 
 function ProgressSteps({ steps }: { steps: Step[] }) {
     return (
-        <div className='progressWrapper'>
+        <div className="flex items-start justify-between">
             {steps.map((step, i) => (
-                <div key={i} className='progressStep'>
-                    <div className={`progressNode ${step.status}`}>
+                <div key={i} className="relative flex flex-1 flex-col items-center gap-2">
+                    <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors ${step.status === 'done'
+                        ? 'bg-[var(--primary)] text-white'
+                        : step.status === 'active'
+                            ? 'border-2 border-[var(--primary)] bg-white text-[var(--primary)]'
+                            : 'border-2 border-gray-300 bg-white text-gray-400'}`}
+                    >
                         {step.status === 'done'
-                            ? <i className='fa-solid fa-check' />
+                            ? <i className='fa-solid fa-check text-xs' />
                             : <span>{i + 1}</span>
                         }
                     </div>
 
-                    <p className={`progressLabel ${step.status}`}>{step.label}</p>
+                    <p className={`text-center text-xs font-medium ${step.status === 'pending' ? 'text-gray-400' : 'text-[var(--primary-dark)]'}`}>{step.label}</p>
 
                     {i < steps.length - 1 && (
-                        <div className={`progressLine ${steps[i + 1].status !== 'pending' ? 'done' : ''}`} />
+                        <div className={`absolute left-1/2 top-4 h-0.5 w-full ${steps[i + 1].status !== 'pending' ? 'bg-[var(--primary)]' : 'bg-gray-200'}`} />
                     )}
                 </div>
             ))}
@@ -177,7 +182,7 @@ function UpdateProfile({ goBack, userRole, userId, restrictToCredentials = false
         }
     };
 
-    const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         
         if (showCredForm) {
@@ -268,87 +273,93 @@ function UpdateProfile({ goBack, userRole, userId, restrictToCredentials = false
     };
 
     return (
-        <section id='updateProfileContainer'>
-            <header>
-                <h2>{restrictToCredentials ? 'Password Recovery' : 'Update Profile'}</h2>
-                <p>{restrictToCredentials ? 'Securely reset your password for your account.' : 'Manage and update your account credentials and personal information securely.'}</p>
+        <section id='updateProfileContainer' className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8 font-[family-name:var(--font-body)] text-[var(--text)] sm:px-6">
+            <header className="relative overflow-hidden rounded-2xl bg-[url('/Background.png')] bg-cover bg-center">
+                <div className="absolute inset-0 bg-orange-600/70" />
+
+                <div className="relative flex flex-col gap-2 px-6 py-10 sm:px-10">
+                    <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-white sm:text-3xl">{restrictToCredentials ? 'Password Recovery' : 'Update Profile'}</h2>
+                    <p className="max-w-2xl text-sm text-orange-50 sm:text-base">{restrictToCredentials ? 'Securely reset your password for your account.' : 'Manage and update your account credentials and personal information securely.'}</p>
+                </div>
             </header>
 
             {loading ? (
-                <p className='loadingText'>Loading profile...</p>
+                <p className="py-12 text-center text-sm text-gray-500">Loading profile...</p>
             ) : (
-                <>
-                    <main>
-                        <form onSubmit={handleSubmit}>
-                            {!restrictToCredentials && (
-                                <fieldset className="toggleField">
-                                    <legend>Select What You Would Like to Update</legend>
-                                    <small>You may update one or both sections simultaneously. Select the applicable option(s) below to proceed.</small>
-                                    
-                                    <label className='toggleCheckbox'>
-                                        <input
-                                            type='checkbox'
-                                            checked={showCredForm}
-                                            onChange={handleCredToggle}
-                                        />
-                                        <p>I would like to update my account credentials <span>(username or password)</span></p>
-                                    </label>
-
+                <main>
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                        {!restrictToCredentials && (
+                            <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                                <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Select What You Would Like to Update</legend>
+                                <small className="text-sm text-gray-500">You may update one or both sections simultaneously. Select the applicable option(s) below to proceed.</small>
                                 
-                                    <label className='toggleCheckbox'>
-                                        <input
-                                            type='checkbox'
-                                            checked={showInfoForm}
-                                            onChange={handleInfoToggle}
-                                        />
-                                        <p>I would like to update my personal information</p>
-                                    </label>
-                                </fieldset>
-                            )}
+                                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-orange-100 bg-white p-3 text-sm text-gray-700 transition-colors hover:bg-[var(--primary-soft)]">
+                                    <input
+                                        type='checkbox'
+                                        checked={showCredForm}
+                                        onChange={handleCredToggle}
+                                        className="mt-0.5 h-4 w-4 cursor-pointer accent-[var(--primary)]"
+                                    />
+                                    <span>I would like to update my account credentials <span className="text-gray-400">(username or password)</span></span>
+                                </label>
 
-                            {showCredForm && (
-                                <fieldset className='authField'>
-                                    <legend>Change Account Credentials</legend>
-                                    <small>For security purposes, please verify your identity before making any changes to your account credentials.</small>
-                                    
-                                    {(() => {
-                                        const hasBoth = restrictToCredentials
-                                            ? !!credData.identifier && !!credData.pin
-                                            : !!credData.currentPassword && !!credData.pin;
-                                        const verified  = isVerified;
-                                        const hasNew    = !!(credData.newUsername || credData.newPassword);
-                                        const confirmed = hasNew && credData.newPassword === credData.confirmNewPassword;
+                                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-orange-100 bg-white p-3 text-sm text-gray-700 transition-colors hover:bg-[var(--primary-soft)]">
+                                    <input
+                                        type='checkbox'
+                                        checked={showInfoForm}
+                                        onChange={handleInfoToggle}
+                                        className="mt-0.5 h-4 w-4 cursor-pointer accent-[var(--primary)]"
+                                    />
+                                    <span>I would like to update my personal information</span>
+                                </label>
+                            </fieldset>
+                        )}
 
-                                        const steps: Step[] = [
-                                            { label: 'Enter Credentials', status: hasBoth ? 'done' : 'active' },
-                                            { label: 'Verify Identity', status: !hasBoth ? 'pending' : verified ? 'done' : 'active' },
-                                            { label: 'Set New Details', status: !verified ? 'pending' : (hasNew && !confirmed) ? 'active' : hasNew && confirmed ? 'done' : 'active' },
-                                            { label: 'Save Changes', status: !verified || !hasNew ? 'pending' : confirmed ? 'active' : 'pending' },
-                                        ];
+                        {showCredForm && (
+                            <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                                <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Change Account Credentials</legend>
+                                <small className="text-sm text-gray-500">For security purposes, please verify your identity before making any changes to your account credentials.</small>
+                                
+                                {(() => {
+                                    const hasBoth = restrictToCredentials
+                                        ? !!credData.identifier && !!credData.pin
+                                        : !!credData.currentPassword && !!credData.pin;
+                                    const verified  = isVerified;
+                                    const hasNew    = !!(credData.newUsername || credData.newPassword);
+                                    const confirmed = hasNew && credData.newPassword === credData.confirmNewPassword;
 
-                                        return <ProgressSteps steps={steps} />;
-                                    })()}
+                                    const steps: Step[] = [
+                                        { label: 'Enter Credentials', status: hasBoth ? 'done' : 'active' },
+                                        { label: 'Verify Identity', status: !hasBoth ? 'pending' : verified ? 'done' : 'active' },
+                                        { label: 'Set New Details', status: !verified ? 'pending' : (hasNew && !confirmed) ? 'active' : hasNew && confirmed ? 'done' : 'active' },
+                                        { label: 'Save Changes', status: !verified || !hasNew ? 'pending' : confirmed ? 'active' : 'pending' },
+                                    ];
 
-                                    <fieldset className='accountIdentityField'>
-                                        <legend>Identity Verification</legend>
-                                        <small>Enter your current password and PIN exactly as registered. Verification occurs automatically.</small>
+                                    return <ProgressSteps steps={steps} />;
+                                })()}
 
-                                        <div className="accountIdentityWrapper">
-                                            {restrictToCredentials ? (
-                                                <div className='username'>
-                                                    <label>Username or Email <span>*</span></label>
-                                                    <input
-                                                        name='identifier'
-                                                        type='text'
-                                                        placeholder="Enter your username or email"
-                                                        value={credData.identifier}
-                                                        onChange={handleCredChange}
-                                                        required
-                                                    />
-                                                </div>
-                                            ) : (
-                                                <div className='currentPass'>
-                                                    <label>Current Password <span>*</span></label>
+                                <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                                    <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Identity Verification</legend>
+                                    <small className="text-sm text-gray-500">Enter your current password and PIN exactly as registered. Verification occurs automatically.</small>
+
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        {restrictToCredentials ? (
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-sm font-medium text-gray-700">Username or Email <span className="text-red-500">*</span></label>
+                                                <input
+                                                    name='identifier'
+                                                    type='text'
+                                                    placeholder="Enter your username or email"
+                                                    value={credData.identifier}
+                                                    onChange={handleCredChange}
+                                                    required
+                                                    className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-sm font-medium text-gray-700">Current Password <span className="text-red-500">*</span></label>
+                                                <div className="relative">
                                                     <input
                                                         name='currentPassword'
                                                         type={viewCurrentPassword ? 'text' : 'password'}
@@ -357,17 +368,23 @@ function UpdateProfile({ goBack, userRole, userId, restrictToCredentials = false
                                                         autoComplete='current-password'
                                                         onChange={handleCredChange}
                                                         required
+                                                        className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 pr-10 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
                                                     />
 
-                                                    <i 
-                                                        className={`fa-solid ${viewCurrentPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+                                                    <button
+                                                        type='button'
                                                         onClick={() => setViewCurrentPassword(prev => !prev)}
-                                                    />
+                                                        className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 transition-colors hover:text-[var(--primary)]"
+                                                    >
+                                                        <i className={`fa-solid ${viewCurrentPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                                    </button>
                                                 </div>
-                                            )}
-                                            
-                                            <div className="pin">
-                                                <label>PIN <span>*</span></label>
+                                            </div>
+                                        )}
+                                        
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-sm font-medium text-gray-700">PIN <span className="text-red-500">*</span></label>
+                                            <div className="relative">
                                                 <input
                                                     name='pin'
                                                     type={viewPin ? 'text' : 'password'}
@@ -375,133 +392,172 @@ function UpdateProfile({ goBack, userRole, userId, restrictToCredentials = false
                                                     value={credData.pin}
                                                     onChange={handleCredChange}
                                                     required
+                                                    className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 pr-10 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
                                                 />
 
-                                                <i 
-                                                    className={`fa-solid ${viewPin ? 'fa-eye-slash' : 'fa-eye'}`}
+                                                <button
+                                                    type='button'
                                                     onClick={() => setViewPin(prev => !prev)}
-                                                />
+                                                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 transition-colors hover:text-[var(--primary)]"
+                                                >
+                                                    <i className={`fa-solid ${viewPin ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                                </button>
                                             </div>
-                                        </div>
-
-                                        <div className="verificationWrapper">
-                                            {verifying && <p className='verifying'><small>Verifying credentials...</small></p>}
-                                            {!verifying && isVerified && <p className='verified'><small>Identity verified. You may now update your credentials below.</small></p>}
-                                            {!verifying && verifyError && <p className='error'><small>{verifyError}</small></p>}
-                                        </div>
-                                    </fieldset>
-                                        
-                                    {isVerified && (
-                                        <fieldset className='accountDetailsField'>
-                                            <legend>Account Details</legend>
-                                            <small>Leave any field blank to retain its current value.</small>
-                                            
-                                            <div className="accountDetailsWrapper">
-                                                <div className="username">
-                                                    <label>New Username</label>
-                                                    <input
-                                                        name='newUsername'
-                                                        type='text'
-                                                        placeholder="Enter a new username (optional)"
-                                                        value={credData.newUsername}
-                                                        autoComplete='username'
-                                                        onChange={handleCredChange}
-                                                    />
-                                                </div>
-                                                
-                                                <div className="newPassword">
-                                                    <label>New Password</label>
-                                                    <input
-                                                        name='newPassword'
-                                                        type = {viewNewPassword ? 'text' : 'password'}
-                                                        placeholder="Enter a new password (optional)"
-                                                        value={credData.newPassword}
-                                                        autoComplete='new-password'
-                                                        onChange={handleCredChange}
-                                                    />
-
-                                                    <i 
-                                                        className={`fa-solid ${viewNewPassword ? 'fa-eye-slash' : 'fa-eye'}`}
-                                                        onClick={() => setViewNewPassword(prev => !prev)}
-                                                    />
-                                                </div>
-
-                                                <div className="confirmPassword">
-                                                    <label>Confirm New Password</label>
-                                                    <input
-                                                        name='confirmNewPassword'
-                                                        type = {viewConfirmNewPassword ? 'text' : 'password'}
-                                                        placeholder="Re-enter your new password"
-                                                        value={credData.confirmNewPassword}
-                                                        autoComplete='new-password'
-                                                        onChange={handleCredChange}
-                                                    />
-
-                                                    <i 
-                                                        className={`fa-solid ${viewConfirmNewPassword ? 'fa-eye-slash' : 'fa-eye'}`}
-                                                        onClick={() => setViewConfirmNewPassword(prev => !prev)}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    )}
-                                </fieldset>
-                            )}
-
-                            {showInfoForm && !restrictToCredentials && (
-                                <fieldset className='infoField'>
-                                    <legend>Personal Information</legend>
-                                    <small>Ensure all required fields are accurately filled in before submitting your changes.</small>
-
-                                    <div className="infoWrapper">
-                                        <div id="firstName">
-                                            <label>First Name <span>*</span></label>
-                                            <input name='first_name' type='text' placeholder="Enter your first name" value={infoData.first_name} autoComplete='firstName' onChange={handleInfoChange} required />
-                                        </div>
-
-                                        <div id="middleName">
-                                            <label>Middle Name</label>
-                                            <input name='middle_name' type='text' placeholder="Enter your middle name" value={infoData.middle_name} autoComplete='middleName' onChange={handleInfoChange} />
-                                        </div>
-
-                                        <div id="lastName">
-                                            <label>LastName <span>*</span></label>
-                                            <input name='last_name' type='text' placeholder="Enter your last name" value={infoData.last_name} autoComplete='lastName' onChange={handleInfoChange} required />
-                                        </div>
-
-                                        <div id="extName">
-                                            <label>Extension</label>
-                                            <input name='ext_name' type='text' placeholder="e.g. jr., sr., III" value={infoData.ext_name} autoComplete='extenstion' onChange={handleInfoChange} />
-                                        </div>
-
-                                        <div id="email">
-                                            <label>Email <span>*</span></label>
-                                            <input name='email' type='email' placeholder="e.g. XXXXXXX@XXXXX.com" value={infoData.email} autoComplete='email' onChange={handleInfoChange} required />
-                                        </div>
-
-                                        <div id="contactNumber">
-                                            <label>Contact Number</label>
-                                            <input name='contact_num' type='text' placeholder="09XXXXXXXXX" value={infoData.contact_num} autoComplete='contactNumber' onChange={handleInfoChange} />
                                         </div>
                                     </div>
-                                </fieldset>
-                            )}
 
-                            <div className='btnWrapper'>
-                                {anySelected ? (
-                                    <>
-                                        <button type='submit' className='saveBtn' disabled={submitting}>
-                                            {submitting ? 'Saving...' : 'Save Changes'}
-                                        </button>
-                                        <button type='button' className='cancelBtn' onClick={goBack}>Cancel</button>
-                                    </>
-                                ) : (
-                                    <button type='button' className='backBtn' onClick={goBack}>Cancel</button>
+                                    <div className="flex flex-col gap-1">
+                                        {verifying && <p className="text-sm text-gray-500"><small>Verifying credentials...</small></p>}
+                                        {!verifying && isVerified && <p className="text-sm font-medium text-emerald-600"><small>Identity verified. You may now update your credentials below.</small></p>}
+                                        {!verifying && verifyError && <p className="text-sm font-medium text-red-600"><small>{verifyError}</small></p>}
+                                    </div>
+                                </fieldset>
+                                    
+                                {isVerified && (
+                                    <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                                        <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Account Details</legend>
+                                        <small className="text-sm text-gray-500">Leave any field blank to retain its current value.</small>
+                                        
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-sm font-medium text-gray-700">New Username</label>
+                                                <input
+                                                    name='newUsername'
+                                                    type='text'
+                                                    placeholder="Enter a new username (optional)"
+                                                    value={credData.newUsername}
+                                                    autoComplete='username'
+                                                    onChange={handleCredChange}
+                                                    className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
+                                                />
+                                            </div>
+                                            
+                                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-sm font-medium text-gray-700">New Password</label>
+                                                    <div className="relative">
+                                                        <input
+                                                            name='newPassword'
+                                                            type={viewNewPassword ? 'text' : 'password'}
+                                                            placeholder="Enter a new password (optional)"
+                                                            value={credData.newPassword}
+                                                            autoComplete='new-password'
+                                                            onChange={handleCredChange}
+                                                            className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 pr-10 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
+                                                        />
+
+                                                        <button
+                                                            type='button'
+                                                            onClick={() => setViewNewPassword(prev => !prev)}
+                                                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 transition-colors hover:text-[var(--primary)]"
+                                                        >
+                                                            <i className={`fa-solid ${viewNewPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-sm font-medium text-gray-700">Confirm New Password</label>
+                                                    <div className="relative">
+                                                        <input
+                                                            name='confirmNewPassword'
+                                                            type={viewConfirmNewPassword ? 'text' : 'password'}
+                                                            placeholder="Re-enter your new password"
+                                                            value={credData.confirmNewPassword}
+                                                            autoComplete='new-password'
+                                                            onChange={handleCredChange}
+                                                            className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 pr-10 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
+                                                        />
+
+                                                        <button
+                                                            type='button'
+                                                            onClick={() => setViewConfirmNewPassword(prev => !prev)}
+                                                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 transition-colors hover:text-[var(--primary)]"
+                                                        >
+                                                            <i className={`fa-solid ${viewConfirmNewPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
                                 )}
-                            </div>
-                        </form>
-                    </main>
-                </>
+                            </fieldset>
+                        )}
+
+                        {showInfoForm && !restrictToCredentials && (
+                            <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                                <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Personal Information</legend>
+                                <small className="text-sm text-gray-500">Ensure all required fields are accurately filled in before submitting your changes.</small>
+
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-sm font-medium text-gray-700">First Name <span className="text-red-500">*</span></label>
+                                        <input name='first_name' type='text' placeholder="Enter your first name" value={infoData.first_name} autoComplete='firstName' onChange={handleInfoChange} required className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200" />
+                                    </div>
+
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-sm font-medium text-gray-700">Middle Name</label>
+                                        <input name='middle_name' type='text' placeholder="Enter your middle name" value={infoData.middle_name} autoComplete='middleName' onChange={handleInfoChange} className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200" />
+                                    </div>
+
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></label>
+                                        <input name='last_name' type='text' placeholder="Enter your last name" value={infoData.last_name} autoComplete='lastName' onChange={handleInfoChange} required className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200" />
+                                    </div>
+
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-sm font-medium text-gray-700">Extension</label>
+                                        <input name='ext_name' type='text' placeholder="e.g. jr., sr., III" value={infoData.ext_name} autoComplete='extenstion' onChange={handleInfoChange} className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200" />
+                                    </div>
+
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
+                                        <input name='email' type='email' placeholder="e.g. XXXXXXX@XXXXX.com" value={infoData.email} autoComplete='email' onChange={handleInfoChange} required className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200" />
+                                    </div>
+
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-sm font-medium text-gray-700">Contact Number</label>
+                                        <input name='contact_num' type='text' placeholder="09XXXXXXXXX" value={infoData.contact_num} autoComplete='contactNumber' onChange={handleInfoChange} className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                        )}
+
+                        <div className="flex flex-wrap gap-3">
+                            {anySelected ? (
+                                <>
+                                    <button
+                                        type='submit'
+                                        disabled={submitting}
+                                        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                                    >
+                                        <i className="fa-solid fa-floppy-disk" />
+                                        {submitting ? 'Saving...' : 'Save Changes'}
+                                    </button>
+
+                                    <button
+                                        type='button'
+                                        onClick={goBack}
+                                        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                                    >
+                                        <i className="fa-solid fa-xmark" />
+                                        Cancel
+                                    </button>
+                                </>
+                            ) : (
+                                <button
+                                    type='button'
+                                    onClick={goBack}
+                                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                                >
+                                    <i className="fa-solid fa-arrow-left" />
+                                    Cancel
+                                </button>
+                            )}
+                        </div>
+                    </form>
+                </main>
             )}
         </section>
     );

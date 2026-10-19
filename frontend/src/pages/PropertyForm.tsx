@@ -139,55 +139,58 @@ function PropertyForm(props: PropertyFormProps) {
     };
 
     return (
-        <section id='propertyFormContainer'>
-            <header>
-                <h2>{isEdit ? 'Update Property' : 'Add New Property'}</h2>
-                <p>
-                    {isEdit
-                        ? 'Modify the details of your listed property. All changes will be reflected immediately upon saving.'
-                        : 'Fill in the details below to list a new property under your account.'
-                    }
-                </p>
+        <section id='propertyFormContainer' className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8 font-[family-name:var(--font-body)] text-[var(--text)] sm:px-6">
+            <header className="relative overflow-hidden rounded-2xl bg-[url('/Background.png')] bg-cover bg-center">
+                <div className="absolute inset-0 bg-orange-600/70" />
+
+                <div className="relative flex flex-col gap-2 px-6 py-10 sm:px-10">
+                    <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-white sm:text-3xl">{isEdit ? 'Update Property' : 'Add New Property'}</h2>
+                    <p className="max-w-2xl text-sm text-orange-50 sm:text-base">
+                        {isEdit
+                            ? 'Modify the details of your listed property. All changes will be reflected immediately upon saving.'
+                            : 'Fill in the details below to list a new property under your account.'
+                        }
+                    </p>
+                </div>
             </header>
 
             <main>
-                <form onSubmit={handleSubmit}>
-                    <fieldset>
-                        <legend>Property Images {!isEdit && <span>(optional)</span>}</legend>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                    <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                        <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Property Images {!isEdit && <span className="text-xs font-normal text-gray-400">(optional)</span>}</legend>
 
                         {images.length > 0 && (
-                            <section className='imgPreviewGrid'>
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                                 {images.map((img, i) => (
-                                    <section key={i} className='imgPreviewItem'>
-                                        <img src={img} alt={`Preview ${i + 1}`} />
+                                    <div key={i} className="relative aspect-[4/3] overflow-hidden rounded-lg border border-orange-100 bg-orange-50">
+                                        <img src={img} alt={`Preview ${i + 1}`} className="h-full w-full object-cover" />
 
                                         <button
                                             type='button'
-                                            className='removeImgBtn'
                                             onClick={() => removeImage(i)}
+                                            className="absolute right-1.5 top-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/90 text-gray-800 transition-colors hover:bg-[var(--primary)] hover:text-white"
                                         >
-                                            <i className='fa-solid fa-xmark' />
+                                            <i className='fa-solid fa-xmark text-xs' />
                                         </button>
-                                    </section>
+                                    </div>
                                 ))}
-                            </section>
+                            </div>
                         )}
 
-                        <div className='fileInputWrapper'>
-                            <input
-                                type='file'
-                                accept='image/*'
-                                onChange={handleImageChange}
-                                multiple
-                            />
-                        </div>
+                        <input
+                            type='file'
+                            accept='image/*'
+                            onChange={handleImageChange}
+                            multiple
+                            className="block w-full cursor-pointer rounded-lg border border-gray-300 bg-white text-sm text-gray-600 file:mr-4 file:cursor-pointer file:border-0 file:bg-[var(--primary)] file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--primary-dark)]"
+                        />
                     </fieldset>
 
-                    <fieldset>
-                        <legend>Basic Information</legend>
+                    <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                        <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Basic Information</legend>
 
-                        <section className='fieldGroup'>
-                            <label>Property Name <span>*</span></label>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-medium text-gray-700">Property Name <span className="text-red-500">*</span></label>
                             <input
                                 name='name'
                                 type='text'
@@ -195,11 +198,12 @@ function PropertyForm(props: PropertyFormProps) {
                                 value={formData.name}
                                 onChange={handleCapitalize}
                                 required
+                                className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
                             />
-                        </section>
+                        </div>
 
-                        <section className='fieldGroup'>
-                            <label>Full Address <span>*</span></label>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-medium text-gray-700">Full Address <span className="text-red-500">*</span></label>
                             <input
                                 name='address'
                                 type='text'
@@ -207,113 +211,185 @@ function PropertyForm(props: PropertyFormProps) {
                                 value={formData.address}
                                 onChange={handleCapitalize}
                                 required
+                                className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
                             />
-                        </section>
+                        </div>
 
-                        <section className='fieldGroup'>
-                            <label>Price (₱) per month <span>*</span></label>
-                            <input
-                                name='price'
-                                type='number'
-                                step='0.01'
-                                placeholder='0.00'
-                                value={formData.price}
-                                onChange={handleChange}
-                                required
-                            />
-                        </section>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-sm font-medium text-gray-700">Price (₱) per month <span className="text-red-500">*</span></label>
+                                <input
+                                    name='price'
+                                    type='number'
+                                    step='0.01'
+                                    placeholder='0.00'
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
+                                />
+                            </div>
 
-                        <section className='fieldGroup'>
-                            <label>Description <span className='optional'>(optional)</span></label>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-sm font-medium text-gray-700">Category <span className="text-red-500">*</span></label>
+                                <select
+                                    name='category'
+                                    value={formData.category}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full cursor-pointer rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
+                                >
+                                    <option value=''>Select Category</option>
+                                    <option value='apartment'>Apartment</option>
+                                    <option value='house'>House</option>
+                                    <option value='condo'>Condo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-medium text-gray-700">Description <span className="text-xs font-normal text-gray-400">(optional)</span></label>
                             <textarea
                                 name='description'
                                 rows={5}
                                 placeholder="e.g. Spacious balcony, quiet neighborhood..."
                                 value={formData.description}
                                 onChange={handleCapitalize}
+                                className="w-full resize-y rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
                             />
-                        </section>
-
-                        <section className='fieldGroup'>
-                            <label>Category <span>*</span></label>
-                            <select name='category' value={formData.category} onChange={handleChange} required>
-                                <option value='' className='default'>Select Category</option>
-                                <option value='apartment'>Apartment</option>
-                                <option value='house'>House</option>
-                                <option value='condo'>Condo</option>
-                            </select>
-                        </section>
+                        </div>
                     </fieldset>
 
-                    <fieldset>
-                        <legend>Rooms</legend>
+                    <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                        <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Rooms</legend>
 
                         {(['bedroom_count', 'kitchen_count', 'bathroom_count'] as const).map((field, i) => (
-                            <section key={field} className='counterRow'>
-                                <label>{['Bedrooms', 'Kitchen', 'Bathrooms'][i]}</label>
-                                <div className='stepper'>
-                                    <button type='button' onClick={() => adjustCount(field, -1)}>-</button>
-                                    <span>{formData[field]}</span>
-                                    <button type='button' onClick={() => adjustCount(field, 1)}>+</button>
+                            <div key={field} className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
+                                <label className="text-sm font-medium text-gray-700">{['Bedrooms', 'Kitchen', 'Bathrooms'][i]}</label>
+
+                                <div className="inline-flex items-center gap-3">
+                                    <button
+                                        type='button'
+                                        onClick={() => adjustCount(field, -1)}
+                                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                    >
+                                        <i className="fa-solid fa-minus text-xs" />
+                                    </button>
+
+                                    <span className="min-w-6 text-center text-sm font-semibold text-[var(--text)]">{formData[field]}</span>
+
+                                    <button
+                                        type='button'
+                                        onClick={() => adjustCount(field, 1)}
+                                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                    >
+                                        <i className="fa-solid fa-plus text-xs" />
+                                    </button>
                                 </div>
-                            </section>
+                            </div>
                         ))}
 
-                        <fieldset>
-                            <legend>Other Rooms</legend>
+                        <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                            <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Other Rooms</legend>
 
-                            <div className='counterRow'>
-                                <label>How many other rooms?</label>
-                                <div className='stepper'>
-                                    <button type='button' onClick={() => adjustCount('other_rooms_count', -1)}>-</button>
-                                    <span>{formData.other_rooms_count}</span>
-                                    <button type='button' onClick={() => adjustCount('other_rooms_count', 1)}>+</button>
+                            <div className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
+                                <label className="text-sm font-medium text-gray-700">How many other rooms?</label>
+
+                                <div className="inline-flex items-center gap-3">
+                                    <button
+                                        type='button'
+                                        onClick={() => adjustCount('other_rooms_count', -1)}
+                                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                    >
+                                        <i className="fa-solid fa-minus text-xs" />
+                                    </button>
+
+                                    <span className="min-w-6 text-center text-sm font-semibold text-[var(--text)]">{formData.other_rooms_count}</span>
+
+                                    <button
+                                        type='button'
+                                        onClick={() => adjustCount('other_rooms_count', 1)}
+                                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                    >
+                                        <i className="fa-solid fa-plus text-xs" />
+                                    </button>
                                 </div>
                             </div>
 
                             {Array.from({ length: formData.other_rooms_count }).map((_, i) => (
-                                <div key={i} className='fieldGroup'>
-                                    <label>Room {i + 1} Name</label>
+                                <div key={i} className="flex flex-col gap-1.5">
+                                    <label className="text-sm font-medium text-gray-700">Room {i + 1} Name</label>
                                     <input
                                         type='text'
                                         placeholder='e.g. Balcony, Attic, Library'
                                         value={formData.other_rooms[i] || ''}
                                         onChange={(e) => handleOtherRoomChange(i, e.target.value)}
                                         required
+                                        className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
                                     />
                                 </div>
                             ))}
                         </fieldset>
                     </fieldset>
 
-                    <fieldset>
-                        <legend>Occupants & Pets</legend>
+                    <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                        <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Occupants & Pets</legend>
 
-                        <div className='counterRow'>
-                            <label>Max Persons</label>
-                            <div className='stepper'>
-                                <button type='button' onClick={() => adjustCount('max_occupants', -1)}>-</button>
-                                <span>{formData.max_occupants}</span>
-                                <button type='button' onClick={() => adjustCount('max_occupants', 1)}>+</button>
+                        <div className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
+                            <label className="text-sm font-medium text-gray-700">Max Persons</label>
+
+                            <div className="inline-flex items-center gap-3">
+                                <button
+                                    type='button'
+                                    onClick={() => adjustCount('max_occupants', -1)}
+                                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                >
+                                    <i className="fa-solid fa-minus text-xs" />
+                                </button>
+
+                                <span className="min-w-6 text-center text-sm font-semibold text-[var(--text)]">{formData.max_occupants}</span>
+
+                                <button
+                                    type='button'
+                                    onClick={() => adjustCount('max_occupants', 1)}
+                                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                >
+                                    <i className="fa-solid fa-plus text-xs" />
+                                </button>
                             </div>
                         </div>
 
-                        <div className='counterRow'>
-                            <label>Pets Allowed</label>
-                            <div className='stepper'>
-                                <button type='button' onClick={() => setFormData(prev => ({ ...prev, pet_count: Math.max(1, prev.pet_count - 1) }))}>-</button>
-                                <span>{formData.pet_count}</span>
-                                <button type='button' onClick={() => setFormData(prev => ({ ...prev, pet_count: prev.pet_count + 1 }))}>+</button>
+                        <div className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
+                            <label className="text-sm font-medium text-gray-700">Pets Allowed</label>
+
+                            <div className="inline-flex items-center gap-3">
+                                <button
+                                    type='button'
+                                    onClick={() => setFormData(prev => ({ ...prev, pet_count: Math.max(1, prev.pet_count - 1) }))}
+                                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                >
+                                    <i className="fa-solid fa-minus text-xs" />
+                                </button>
+
+                                <span className="min-w-6 text-center text-sm font-semibold text-[var(--text)]">{formData.pet_count}</span>
+
+                                <button
+                                    type='button'
+                                    onClick={() => setFormData(prev => ({ ...prev, pet_count: prev.pet_count + 1 }))}
+                                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                >
+                                    <i className="fa-solid fa-plus text-xs" />
+                                </button>
                             </div>
                         </div>
                     </fieldset>
 
-                    <fieldset>
-                        <legend>Amenities</legend>
+                    <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                        <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Amenities</legend>
 
-                        <div className='checkboxGrid'>
+                        <div className="flex flex-wrap gap-x-6 gap-y-3">
                             {(['wifi', 'aircon', 'parking'] as const).map(key => (
-                                <label key={key} className='checkboxLabel'>
+                                <label key={key} className="inline-flex cursor-pointer items-center gap-2 text-sm text-gray-600 transition-colors hover:text-[var(--primary-dark)]">
                                     <input
                                         type='checkbox'
                                         checked={formData.amenities[key]}
@@ -321,45 +397,71 @@ function PropertyForm(props: PropertyFormProps) {
                                             ...formData,
                                             amenities: { ...formData.amenities, [key]: e.target.checked }
                                         })}
+                                        className="h-4 w-4 cursor-pointer accent-[var(--primary)]"
                                     />
                                     {key.charAt(0).toUpperCase() + key.slice(1)}
                                 </label>
                             ))}
                         </div>
 
-                        <fieldset>
-                            <legend>Other Amenities</legend>
+                        <fieldset className="flex flex-col gap-4 rounded-xl border border-orange-100 bg-white p-5 shadow-sm">
+                            <legend className="px-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--primary-dark)]">Other Amenities</legend>
 
-                            <div className='counterRow'>
-                                <label>How many other amenities?</label>
-                                <div className='stepper'>
-                                    <button type='button' onClick={() => adjustCount('other_amenities_count', -1)}>-</button>
-                                    <span>{formData.other_amenities_count}</span>
-                                    <button type='button' onClick={() => adjustCount('other_amenities_count', 1)}>+</button>
+                            <div className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
+                                <label className="text-sm font-medium text-gray-700">How many other amenities?</label>
+
+                                <div className="inline-flex items-center gap-3">
+                                    <button
+                                        type='button'
+                                        onClick={() => adjustCount('other_amenities_count', -1)}
+                                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                    >
+                                        <i className="fa-solid fa-minus text-xs" />
+                                    </button>
+
+                                    <span className="min-w-6 text-center text-sm font-semibold text-[var(--text)]">{formData.other_amenities_count}</span>
+
+                                    <button
+                                        type='button'
+                                        onClick={() => adjustCount('other_amenities_count', 1)}
+                                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                    >
+                                        <i className="fa-solid fa-plus text-xs" />
+                                    </button>
                                 </div>
                             </div>
 
                             {Array.from({ length: formData.other_amenities_count }).map((_, i) => (
-                                <div key={i} className='fieldGroup'>
-                                    <label>Amenity {i + 1}</label>
+                                <div key={i} className="flex flex-col gap-1.5">
+                                    <label className="text-sm font-medium text-gray-700">Amenity {i + 1}</label>
                                     <input
                                         type='text'
                                         placeholder='e.g. Appliances, 24/7 Gym, Pool'
                                         value={formData.other_amenities[i] || ''}
                                         onChange={(e) => handleOtherAmenityChange(i, e.target.value)}
                                         required
+                                        className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-[var(--text)] placeholder:text-gray-400 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-orange-200"
                                     />
                                 </div>
                             ))}
                         </fieldset>
                     </fieldset>
 
-                    <div className='btnWrapper'>
-                        <button type='submit' className='submitBtn'>
-                            {isEdit ? 'Save Changes' : '+ Add Property'}
+                    <div className="flex flex-wrap gap-3">
+                        <button
+                            type='submit'
+                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            <i className={`fa-solid ${isEdit ? 'fa-floppy-disk' : 'fa-plus'}`} />
+                            {isEdit ? 'Save Changes' : 'Add Property'}
                         </button>
 
-                        <button type='button' className='cancelBtn' onClick={props.goBack}>
+                        <button
+                            type='button'
+                            onClick={props.goBack}
+                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                        >
+                            <i className="fa-solid fa-xmark" />
                             Cancel
                         </button>
                     </div>
