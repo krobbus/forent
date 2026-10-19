@@ -24,26 +24,31 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
     };
 
     return (
-        <div id='paginationWrapper'>
-            <span className='pageInfo'>Page {currentPage} of {totalPages}</span>
+        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
+            <span className="text-sm text-gray-500">Page {currentPage} of {totalPages}</span>
 
-            <div className='pageNav'>
+            <div className="flex flex-wrap items-center gap-1.5">
                 <button
-                    className='pageBtn prevNext'
+                    type="button"
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
+                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    ‹ Prev
+                    <i className="fa-solid fa-chevron-left text-xs" />
+                    Prev
                 </button>
 
                 {getPages().map((page, i) =>
                     page === '...' ? (
-                        <span key={`ellipsis-${i}`} className='pageEllipsis'>...</span>
+                        <span key={`ellipsis-${i}`} className="px-1 text-gray-400">...</span>
                     ) : (
                         <button
                             key={page}
-                            className={`pageBtn ${currentPage === page ? 'activePage' : ''}`}
+                            type="button"
                             onClick={() => onPageChange(page as number)}
+                            className={`h-9 min-w-9 cursor-pointer rounded-lg border px-3 text-sm font-semibold transition-colors ${currentPage === page
+                                ? 'border-[var(--primary)] bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)]'
+                                : 'border-gray-300 bg-white text-gray-700 hover:bg-[var(--primary-soft)] hover:text-[var(--primary-dark)]'}`}
                         >
                             {page}
                         </button>
@@ -51,11 +56,13 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
                 )}
 
                 <button
-                    className='pageBtn prevNext'
+                    type="button"
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
+                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    Next ›
+                    Next
+                    <i className="fa-solid fa-chevron-right text-xs" />
                 </button>
             </div>
         </div>
