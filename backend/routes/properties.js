@@ -49,7 +49,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', authenticateToken, async (req, res) => {
-    const { images, name, address, price, category, landlord_id, description, bedroom_count, kitchen_count, bathroom_count, other_rooms, other_rooms_count, max_occupants, pets_allowed, pet_count, amenities } = req.body;
+    const { images, name, address, price, category, landlord_id, description, bedroom_count, kitchen_count, bathroom_count, other_rooms, other_rooms_count, max_occupants, pets_allowed, amenities } = req.body;
     const otherRoomsString = Array.isArray(other_rooms) ? other_rooms.join(', ') : other_rooms;
     const amenityList = [];
     if (amenities.wifi) amenityList.push('Wifi');
@@ -59,9 +59,9 @@ router.post('/', authenticateToken, async (req, res) => {
 
     try {
         const result = await req.pool.query(
-            `INSERT INTO properties (images, property_name, address, price, category, landlord_id, description, bedroom_count, kitchen_count, bathroom_count, other_rooms, other_rooms_count, max_occupants, pets_allowed, pet_count, amenities, status)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,'available') RETURNING *`,
-            [JSON.stringify(images || []), name, address, price, category, landlord_id, description, bedroom_count, kitchen_count, bathroom_count, otherRoomsString, other_rooms_count, max_occupants, pets_allowed, pet_count, amenityList]
+            `INSERT INTO properties (images, property_name, address, price, category, landlord_id, description, bedroom_count, kitchen_count, bathroom_count, other_rooms, other_rooms_count, max_occupants, pets_allowed, amenities, status)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,'available') RETURNING *`,
+            [JSON.stringify(images || []), name, address, price, category, landlord_id, description, bedroom_count, kitchen_count, bathroom_count, otherRoomsString, other_rooms_count, max_occupants, pets_allowed, amenityList]
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -71,7 +71,7 @@ router.post('/', authenticateToken, async (req, res) => {
 
 router.patch('/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
-    const { images, name, address, price, description, category, bedroom_count, kitchen_count, bathroom_count, other_rooms, other_rooms_count, max_occupants, pets_allowed, pet_count, amenities } = req.body;
+    const { images, name, address, price, description, category, bedroom_count, kitchen_count, bathroom_count, other_rooms, other_rooms_count, max_occupants, pets_allowed, amenities } = req.body;
     const otherRoomsString = Array.isArray(other_rooms) ? other_rooms.join(', ') : other_rooms;
     const amenityList = [];
     if (amenities.wifi) amenityList.push('Wifi');
@@ -83,8 +83,8 @@ router.patch('/:id', authenticateToken, async (req, res) => {
         const result = await req.pool.query(
             `UPDATE properties SET images=$1, property_name=$2, address=$3, price=$4, description=$5, category=$6,
              bedroom_count=$7, kitchen_count=$8, bathroom_count=$9, other_rooms=$10, other_rooms_count=$11,
-             max_occupants=$12, pets_allowed=$13, pet_count=$14, amenities=$15 WHERE id=$16 RETURNING *`,
-            [JSON.stringify(images || []), name, address, price, description, category, bedroom_count, kitchen_count, bathroom_count, otherRoomsString, other_rooms_count, max_occupants, pets_allowed, pet_count, amenityList, id]
+             max_occupants=$12, pets_allowed=$13, amenities=$14 WHERE id=$15 RETURNING *`,
+            [JSON.stringify(images || []), name, address, price, description, category, bedroom_count, kitchen_count, bathroom_count, otherRoomsString, other_rooms_count, max_occupants, pets_allowed, amenityList, id]
         );
         if (result.rows.length === 0)
             return res.status(404).json({ error: "Property not found" });
