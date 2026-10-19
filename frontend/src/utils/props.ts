@@ -89,7 +89,6 @@ export interface PropertyDataProps {
     other_rooms_count: number;
     max_occupants: number;
     pets_allowed: boolean;
-    pet_count: number;
     amenities: {
         wifi: boolean;
         aircon: boolean;

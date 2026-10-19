@@ -91,7 +91,7 @@ export const usePropertySearch = (
                 if (filters.occupancy === 'large' && max < 7) return false;
             }
 
-            if (filters.hasPets && !p.pets_allowed === true) return false;
+            if (filters.hasPets && !p.pets_allowed) return false;
 
             return true;
         });
