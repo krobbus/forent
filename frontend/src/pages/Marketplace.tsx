@@ -116,13 +116,9 @@ function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onVie
 
     return (
         <section id='marketplaceContainer' className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 font-[family-name:var(--font-body)] text-[var(--text)] sm:px-6">
-            <header className="relative overflow-hidden rounded-2xl bg-[url('/Background.png')] bg-cover bg-center">
-                <div className="absolute inset-0 bg-orange-600/70" />
-
-                <div className="relative flex flex-col gap-2 px-6 py-10 sm:px-10">
-                    <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-white sm:text-3xl">Marketplace</h2>
-                    <p className="max-w-2xl text-sm text-orange-50 sm:text-base">Explore our wide range of rental properties to find your perfect home.</p>
-                </div>
+            <header className="flex flex-col gap-2 pt-10">
+                <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-black sm:text-3xl">Marketplace</h2>
+                <p className="max-w-2xl text-sm text-black-50 sm:text-base">Explore our wide range of rental properties to find your perfect home.</p>
             </header>
 
             <PropertySearch
@@ -209,7 +205,9 @@ function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onVie
                                                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Occupancy</p>
                                                 
                                                 <div className="flex flex-wrap gap-2">
-                                                    {p.pets_allowed && <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-[var(--primary-dark)]">Pet-friendly</span>}
+                                                    <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-[var(--primary-dark)]">
+                                                        {p.pets_allowed ? 'Pets are allowed' : 'Pets not allowed'}
+                                                    </span>
                                                     <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-[var(--primary-dark)]">{getOccupancyLabel(p.max_occupants)}</span>
                                                 </div>
                                             </div>

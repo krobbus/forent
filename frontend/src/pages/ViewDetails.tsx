@@ -179,11 +179,11 @@ function ViewDetails({ goBack, userRole, userId, property, showHeader = true, sh
                                         </div>
 
                                         <div className="flex flex-col gap-1.5">
-                                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Allowed Pets</p>
+                                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Pets</p>
 
                                             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-orange-50 px-3 py-1.5 text-xs font-medium text-[var(--primary-dark)]">
                                                 <i className="fa-solid fa-paw" />
-                                                {property.pet_count ? `${property.pet_count}` : 'Pets not allowed'}
+                                                {property.pets_allowed ? 'Pets are allowed' : 'Pets not allowed'}
                                             </span>
                                         </div>
                                     </div>

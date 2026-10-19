@@ -25,7 +25,6 @@ function PropertyForm(props: PropertyFormProps) {
         other_rooms_count: property?.other_rooms ? property.other_rooms.split(', ').length : 0,
         max_occupants: property?.max_occupants || 1,
         pets_allowed: property?.pets_allowed || false,
-        pet_count: property?.pet_count || 1,
         amenities: {
             wifi: existingAmenities.includes('Wifi'),
             aircon: existingAmenities.includes('Aircon'),
@@ -122,7 +121,7 @@ function PropertyForm(props: PropertyFormProps) {
                         name: '', address: '', price: '', description: '', category: '',
                         bedroom_count: 0, kitchen_count: 0, bathroom_count: 0,
                         other_rooms: [], other_rooms_count: 0,
-                        max_occupants: 1, pets_allowed: false, pet_count: 1,
+                        max_occupants: 1, pets_allowed: false,
                         amenities: { wifi: false, aircon: false, parking: false },
                         other_amenities: [], other_amenities_count: 0,
                     });
@@ -360,26 +359,24 @@ function PropertyForm(props: PropertyFormProps) {
                         </div>
 
                         <div className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
-                            <label className="text-sm font-medium text-gray-700">Pets Allowed</label>
+                            <span className="text-sm font-medium text-gray-700">Are pets allowed?</span>
 
-                            <div className="inline-flex items-center gap-3">
-                                <button
-                                    type='button'
-                                    onClick={() => setFormData(prev => ({ ...prev, pet_count: Math.max(1, prev.pet_count - 1) }))}
-                                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
-                                >
-                                    <i className="fa-solid fa-minus text-xs" />
-                                </button>
-
-                                <span className="min-w-6 text-center text-sm font-semibold text-[var(--text)]">{formData.pet_count}</span>
-
-                                <button
-                                    type='button'
-                                    onClick={() => setFormData(prev => ({ ...prev, pet_count: prev.pet_count + 1 }))}
-                                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
-                                >
-                                    <i className="fa-solid fa-plus text-xs" />
-                                </button>
+                            <div className="inline-flex items-center gap-2" role="group" aria-label="Are pets allowed?">
+                                {[true, false].map(allowed => (
+                                    <button
+                                        key={String(allowed)}
+                                        type="button"
+                                        aria-pressed={formData.pets_allowed === allowed}
+                                        onClick={() => setFormData(prev => ({ ...prev, pets_allowed: allowed }))}
+                                        className={`cursor-pointer rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${
+                                            formData.pets_allowed === allowed
+                                                ? 'border-[var(--primary)] bg-[var(--primary)] text-white'
+                                                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100'
+                                        }`}
+                                    >
+                                        {allowed ? 'Yes' : 'No'}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     </fieldset>

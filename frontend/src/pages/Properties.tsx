@@ -223,7 +223,9 @@ function Properties({ goBack, userId, userRole,  onViewDetails, onCreateRequest,
                                                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Occupancy</p>
                                                 
                                                 <div className="flex flex-wrap gap-2">
-                                                    {(p.pets_allowed || p.pet_count > 0) && <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-[var(--primary-dark)]">Pet-friendly</span>}
+                                                    <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-[var(--primary-dark)]">
+                                                        {p.pets_allowed ? 'Pets are allowed' : 'Pets not allowed'}
+                                                    </span>
                                                     <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-[var(--primary-dark)]">{getOccupancyLabel(p.max_occupants)}</span>
                                                 </div>
                                             </div>
