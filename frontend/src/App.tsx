@@ -20,21 +20,40 @@ import PaymentHistory from './pages/PaymentHistory';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
 
+type NavItem = {
+  icon: string;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+};
+
 function NavCrumb({ crumbs }: { crumbs: Crumb[] }) {
   if (crumbs.length === 0) return null;
 
   return (
-    <nav aria-label="breadcrumb" className="py-3 px-4 bg-white border-bottom mb-4">
-      <ol className="breadcrumb mb-0">
-        {crumbs.map((crumb, i) => (
-          <li key={i} className={`breadcrumb-item ${i === crumbs.length - 1 ? 'active text-dark fw-semibold' : ''}`}>
-            {crumb.onClick ? (
-              <a role="button" className="text-decoration-none text-primary" onClick={crumb.onClick}>{crumb.label}</a>
-            ) : (
-              <span>{crumb.label}</span>
-            )}
-          </li>
-        ))}
+    <nav aria-label="breadcrumb" className="mx-auto w-full max-w-6xl px-4 pt-6 font-[family-name:var(--font-body)] sm:px-6">
+      <ol className="flex flex-wrap items-center gap-2 text-sm">
+        {crumbs.map((crumb, i) => {
+          const isLast = i === crumbs.length - 1;
+
+          return (
+            <li key={i} className="flex items-center gap-2">
+              {i > 0 && <i className="fa-solid fa-chevron-right text-[10px] text-gray-400" />}
+
+              {crumb.onClick && !isLast ? (
+                <button
+                  type="button"
+                  onClick={crumb.onClick}
+                  className="cursor-pointer font-medium text-[var(--primary)] transition-colors hover:text-[var(--primary-dark)] hover:underline"
+                >
+                  {crumb.label}
+                </button>
+              ) : (
+                <span className={isLast ? 'font-semibold text-[var(--text)]' : 'text-gray-500'}>{crumb.label}</span>
+              )}
+            </li>
+          );
+        })}
       </ol>
     </nav>
   );
@@ -378,7 +397,7 @@ function App() {
                 setSelectedProperty(null);
 
                 previousView === 'home' 
-                ? navigateTo('availablePropertySection') : previousView === 'myProperties' || previousView === 'myRentals' 
+                ? navigateTo('marketplaceContainer') : previousView === 'myProperties' || previousView === 'myRentals' 
                   ? setCurrentView(propertyView) : previousView === 'viewDetails'
                     ? setCurrentView('viewDetails') : setCurrentView('home');
               }}
@@ -496,18 +515,27 @@ function App() {
       default:
         return (
           <>
-            <div className='headerWrapper'>
-              <h1>FoRent</h1>
-              <h2>Unlock The Door to Better Living</h2>
+            <section id='homeSection' className="mx-auto w-full max-w-6xl px-4 pt-8 font-[family-name:var(--font-body)] text-[var(--text)] sm:px-6">
+              <header className="relative overflow-hidden rounded-2xl bg-[url('/Background.png')] bg-cover bg-center">
+                <div className="absolute inset-0 bg-black/50" />
 
-              <div className='headerBtnWrapper'>
-                {!userRole && (
-                  <button onClick={() => setCurrentView('auth')}>Log In / Sign Up</button>
-                )}
+                <div className="relative flex flex-col items-center gap-5 px-6 py-16 text-center sm:px-10 sm:py-24">
+                  <div className="flex flex-col gap-2">
+                    <h1 className="font-[family-name:var(--font-heading)] text-4xl font-bold text-white sm:text-5xl">FoRent</h1>
+                    <h2 className="max-w-2xl text-base text-orange-50 sm:text-lg">Unlock The Door to Better Living</h2>
+                  </div>
 
-                <button onClick={() => navigateTo('marketplaceContainer')}>See Available Properties</button>
-              </div>
-            </div>
+                  <button
+                    type="button"
+                    onClick={() => navigateTo('marketplaceContainer')}
+                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-white bg-white px-4 py-2.5 text-sm font-semibold text-[var(--text)] transition-colors hover:bg-transparent hover:text-white"
+                  >
+                    <i className="fa-solid fa-magnifying-glass" />
+                    See Available Properties
+                  </button>
+                </div>
+              </header>
+            </section>
 
             <Marketplace
               userId={userId || 0}
@@ -565,101 +593,192 @@ function App() {
     return () => window.removeEventListener('unauthorized', handleLogout);
   }, [handleLogout]);
 
+  const isPropertyView = currentView === 'myProperties' || currentView === 'myRentals';
+
+  const navItems: NavItem[] = userRole ? [
+    {
+      icon: 'fa-home',
+      label: 'Home',
+      active: currentView === 'home',
+      onClick: () => { navigateTo('homeSection'); setIsNavOpen(false); },
+    },
+    {
+      icon: 'fa-user',
+      label: 'View Profile',
+      active: currentView === 'viewProfile',
+      onClick: () => handleNavClick('viewProfile'),
+    },
+    {
+      icon: 'fa-user-pen',
+      label: 'Update Profile',
+      active: currentView === 'updateProfile',
+      onClick: () => handleNavClick('updateProfile'),
+    },
+    ...(userRole === 'landlord' ? [
+      {
+        icon: 'fa-tree-city',
+        label: 'My Properties',
+        active: isPropertyView,
+        onClick: () => handleNavClick('myProperties'),
+      },
+      {
+        icon: 'fa-plus',
+        label: 'Add New Property',
+        active: currentView === 'addProperty',
+        onClick: () => handleNavClick('addProperty'),
+      },
+    ] : []),
+    ...(userRole === 'tenant' ? [
+      {
+        icon: 'fa-house-user',
+        label: 'My Rentals',
+        active: isPropertyView,
+        onClick: () => handleNavClick('myRentals'),
+      },
+    ] : []),
+    {
+      icon: 'fa-file-circle-check',
+      label: 'Rental Applications',
+      active: currentView === 'rentalApplications',
+      onClick: () => handleNavClick('rentalApplications'),
+    },
+    {
+      icon: 'fa-screwdriver-wrench',
+      label: 'Maintenance Requests',
+      active: currentView === 'maintenanceRequests',
+      onClick: () => handleNavClick('maintenanceRequests'),
+    },
+    {
+      icon: 'fa-credit-card',
+      label: 'Payment History',
+      active: currentView === 'paymentHistory',
+      onClick: () => handleNavClick('paymentHistory'),
+    },
+  ] : [];
+
+  const fullName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ');
+
   return (
-    <>
-      <nav className={`navbar ${isNavOpen ? 'show' : ''}`}>
-        {userRole &&
-          <div className='navbarHeader'>
-            <span className={`titleText ${isNavOpen ? 'show' : ''}`}>
-              <i className={`fa-solid fa-bars ${isNavOpen ? 'show' : ''}`} onClick={() => setIsNavOpen(!isNavOpen)} />
+    <div className="min-h-screen bg-white font-[family-name:var(--font-body)] text-[var(--text)]">
+      <header className="sticky top-0 z-30 border-b border-orange-100 bg-white">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+          <div className="flex items-center gap-3">
+            {userRole && (
+              <button
+                type="button"
+                aria-label="Open menu"
+                onClick={() => setIsNavOpen(true)}
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-[var(--primary)] bg-white text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+              >
+                <i className="fa-solid fa-bars" />
+              </button>
+            )}
 
-              <div className={`navTitle ${isNavOpen ? 'show' : ''}`}>
-                <img src='/Logo.png' />
-                <h2>FoRent</h2>
-              </div>
-            </span>
-
-            <div className={`welcomeWrapper ${isNavOpen ? 'show' : ''}`}>
-              <span>Welcome,</span>
-              <span>{profile?.first_name} {profile?.last_name}</span> 
-            </div>
+            <button
+              type="button"
+              onClick={() => setCurrentView('home')}
+              className="flex cursor-pointer items-center gap-1.5"
+            >
+              <img src="/Logo.png" alt="FoRent logo" className="h-6 w-6 object-contain" />
+              <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-[var(--primary-dark)]">FoRent</span>
+            </button>
           </div>
-        }
 
-        <ul className={isNavOpen ? 'show' : ''}>
-          {userRole && (
-            <>
-              <li>
-                <i className='fa-solid fa-home' />
-                <a onClick={() => { 
-                  navigateTo('homeSection'); 
-                  setIsNavOpen(false); 
-                }}>Home</a>
-              </li>
-
-              <li>
-                <i className='fa-solid fa-user' />
-                <a onClick={() => handleNavClick('viewProfile')}>View Profile</a>
-              </li>
-
-              <li>
-                <i className='fa-solid fa-users' />
-                <a onClick={() => handleNavClick('updateProfile')}>Update Profile</a>
-              </li>
-
-              { userRole === 'landlord' && 
-                <>
-                  <li>
-                    <i className='fa-solid fa-tree-city' />
-                    <a onClick={() => handleNavClick('myProperties')}>My Properties</a>
-                  </li>
-
-                  <li>
-                    <i className='fa-solid fa-tree-city' />
-                    <a onClick={() => handleNavClick('addProperty')}>Add New Property</a>
-                  </li>
-                </>
-              }
-
-              { userRole === 'tenant' && 
-                <li>
-                  <i className='fa-solid fa-tree-city' />
-                  <a onClick={() => handleNavClick('myRentals')}>My Rentals</a>
-                </li> }
-              
-              <li>
-                <i className='fa-solid fa-file-circle-check' />
-                <a onClick={() => handleNavClick('rentalApplications')}>Rental Applications</a>
-              </li>
-
-              <li>
-                <i className='fa-solid fa-file-contract' />
-                <a onClick={() => handleNavClick('maintenanceRequests')}>Maintenance Requests</a>
-              </li>
-
-              <li>
-                <i className='fa-solid fa-comment-dollar' />
-                <a onClick={() => handleNavClick('paymentHistory')}>Payment History</a>
-              </li>
-
-              <li id='logoutLink'>
-                <i className='fa-solid fa-arrow-right-from-bracket' />
-                <a onClick={() => {
-                handleLogout(); 
-                setIsNavOpen(false);
-              }}>Logout</a></li>
-            </>
+          {userRole ? (
+            <div className="hidden items-center gap-2 text-sm sm:flex">
+              <span className="text-gray-500">Welcome,</span>
+              <span className="font-semibold text-[var(--text)]">{fullName || 'User'}</span>
+            </div>
+          ) : (
+            currentView !== 'auth' && currentView !== 'forgotPassword' && (
+              <button
+                type="button"
+                onClick={() => setCurrentView('auth')}
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)]"
+              >
+                <i className="fa-solid fa-right-to-bracket" />
+                Log In / Sign Up
+              </button>
+            )
           )}
-        </ul>
-      </nav>
+        </div>
+      </header>
 
-      <main>
+      {userRole && (
+        <>
+          <div
+            onClick={() => setIsNavOpen(false)}
+            className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${isNavOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+          />
+
+          <aside
+            inert={!isNavOpen}
+            className={`fixed left-0 top-0 z-50 flex h-full w-72 max-w-[85%] flex-col bg-white shadow-xl transition-transform duration-300 ${isNavOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          >
+            <div className="relative overflow-hidden bg-[url('/Background.png')] bg-cover bg-center">
+              <div className="absolute inset-0 bg-orange-600/70" />
+
+              <div className="relative flex items-start justify-between gap-3 px-5 py-6">
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <img src="/Logo.png" alt="FoRent logo" className="h-9 w-9 rounded-lg bg-white/90 object-contain p-1" />
+                    <h2 className="font-[family-name:var(--font-heading)] text-lg font-bold text-white">FoRent</h2>
+                  </div>
+
+                  <div className="flex flex-col text-sm text-orange-50">
+                    <span>Welcome,</span>
+                    <span className="font-semibold text-white">{fullName || 'User'}</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  aria-label="Close menu"
+                  onClick={() => setIsNavOpen(false)}
+                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/90 text-gray-800 transition-colors hover:bg-[var(--primary)] hover:text-white"
+                >
+                  <i className="fa-solid fa-xmark" />
+                </button>
+              </div>
+            </div>
+
+            <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
+              {navItems.map(item => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={item.onClick}
+                  className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-3.5 py-2.5 text-left text-sm font-semibold transition-colors ${item.active
+                    ? 'bg-[var(--primary-soft)] text-[var(--primary-dark)]'
+                    : 'text-gray-700 hover:bg-[var(--primary-soft)] hover:text-[var(--primary-dark)]'}`}
+                >
+                  <i className={`fa-solid ${item.icon} w-5 text-center`} />
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+
+            <div className="border-t border-orange-100 p-3">
+              <button
+                type="button"
+                onClick={() => { handleLogout(); setIsNavOpen(false); }}
+                className="flex w-full cursor-pointer items-center gap-3 rounded-lg border border-red-500 bg-white px-3.5 py-2.5 text-left text-sm font-semibold text-red-600 transition-colors hover:bg-red-50"
+              >
+                <i className="fa-solid fa-arrow-right-from-bracket w-5 text-center" />
+                Logout
+              </button>
+            </div>
+          </aside>
+        </>
+      )}
+
+      <main className="flex w-full flex-col">
         {authLoading
-          ? <p className='loadingText'>Loading...</p>
+          ? <p className="py-12 text-center text-sm text-gray-500">Loading...</p>
           : renderMainContent()
         }
       </main>
-    </>  
+    </div>
   )
 }
 
