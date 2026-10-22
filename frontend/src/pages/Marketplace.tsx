@@ -8,7 +8,7 @@ import PropertyGallery from '../components/PropertyGallery';
 import PropertySearch from '../components/PropertySearch';
 import Pagination from '../components/Pagination';
 
-function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onViewRentalApplications }: MarketplaceProps) {
+function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onViewRentalApplications, onUpdateProperty }: MarketplaceProps) {
     const [loading, setLoading] = useState(true);
     const [properties, setProperties] = useState<PropertyDataProps[]>([]);
     const [applications, checkApplications] = useState<RentalApplicationDataProps[]>([]);
@@ -240,33 +240,43 @@ function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onVie
                                         </section>
 
                                         <section className="mt-auto flex flex-wrap gap-2 border-t border-orange-200 pt-4">
-                                            {p.status === 'available' ? (
-                                                <>
-                                                    {applications.some(app => app.property_id === p.id) ? (
-                                                        <button
-                                                            onClick={onViewRentalApplications}
-                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
-                                                        >
-                                                            <i className="fa-solid fa-clipboard-check" />
-                                                            Check Application
-                                                        </button>
-                                                    ) : (
-                                                        <button
-                                                            onClick={() => onViewApplyRental(p)}
-                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
-                                                        >
-                                                            <i className="fa-solid fa-paper-plane" />
-                                                            Apply Now
-                                                        </button>
-                                                    )}
-                                                </>
+                                            {userRole === 'tenant' ? (
+                                                p.status === 'available' ? (
+                                                    <>
+                                                        {applications.some(app => app.property_id === p.id) ? (
+                                                            <button
+                                                                onClick={onViewRentalApplications}
+                                                                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                                                            >
+                                                                <i className="fa-solid fa-clipboard-check" />
+                                                                Check Application
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() => onViewApplyRental(p)}
+                                                                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                                                            >
+                                                                <i className="fa-solid fa-paper-plane" />
+                                                                Apply Now
+                                                            </button>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <button
+                                                        disabled
+                                                        className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-500"
+                                                    >
+                                                        <i className="fa-solid fa-lock" />
+                                                        Currently Occupied
+                                                    </button>
+                                                )
                                             ) : (
                                                 <button
-                                                    disabled
-                                                    className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-500"
+                                                    onClick={() => onUpdateProperty(p)}
+                                                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
                                                 >
-                                                    <i className="fa-solid fa-lock" />
-                                                    Currently Occupied
+                                                    <i className="fa-solid fa-pen-to-square" />
+                                                    Update Details
                                                 </button>
                                             )}
 
