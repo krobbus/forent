@@ -52,6 +52,7 @@ export interface MarketplaceProps {
     userRole: Role;
     onViewDetails: (property: PropertyDataProps) => void;
     onViewApplyRental: (property: PropertyDataProps) => void;
+    onUpdateProperty: (property: PropertyDataProps) => void;
     onViewRentalApplications: () => void;
 }
 
