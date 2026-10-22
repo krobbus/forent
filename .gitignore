@@ -17,7 +17,8 @@ frontend/dist/
 
 
 # Misc
-database.txt
+DATABASE.md
+CHANGES.md
 *.local
 *.log
 npm-debug.log*
