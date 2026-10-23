@@ -1,5 +1,4 @@
 export type Role = 'landlord' | 'tenant' | null;
-export type Crumb = { label: string; onClick?: () => void };
 export type Step = { label: string; status: 'done' | 'active' | 'pending' };
 export type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'withdrawn';
 export type RequestStatus = 'pending' | 'in_progress' | 'finished' | 'cancelled';
