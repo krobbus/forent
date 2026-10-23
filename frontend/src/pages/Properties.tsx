@@ -257,7 +257,7 @@ function Properties({ goBack, userId, userRole,  onViewDetails, onCreateRequest,
                                             </div>
                                         </section>
 
-                                        <section className="mt-auto flex flex-wrap gap-2 border-t border-orange-100 pt-4">
+                                        <section className="mt-auto flex flex-wrap justify-end gap-2 border-t border-orange-100 pt-4">
                                             {userRole === 'landlord' ? (
                                                 <>
                                                     <button
@@ -331,7 +331,7 @@ function Properties({ goBack, userId, userRole,  onViewDetails, onCreateRequest,
                     </>
                 )}
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap justify-end gap-3">
                     <button
                         type="button"
                         onClick={goBack}

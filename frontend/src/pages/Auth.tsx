@@ -270,7 +270,7 @@ function Auth({ goBack, setUserRole, setUserId, onForgotPassword }: AuthProps){
                         </fieldset>
                     )}
                     
-                    <div className="flex flex-wrap justify-center gap-3 ml-auto">
+                    <div className="flex w-full flex-wrap justify-end gap-3">
                         <button
                             type='submit'
                             className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"

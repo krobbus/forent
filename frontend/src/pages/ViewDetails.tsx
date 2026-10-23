@@ -88,18 +88,6 @@ function ViewDetails({ goBack, userRole, userId, property, showHeader = true, sh
                                         )}
                                     />
 
-                                    <div className="flex flex-col gap-1">
-                                        <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold text-[var(--text)]">{property.property_name}</h3>
-                                        <p className="flex items-center gap-2 text-sm text-gray-500">
-                                            <i className="fa-solid fa-location-dot text-[var(--primary)]" />
-                                            {property.address ? `${property.address}` : 'No address available'}
-                                        </p>
-                                        <p className="flex items-center gap-2 text-sm text-gray-500">
-                                            <i className="fa-solid fa-house text-[var(--primary)]" />
-                                            {property.category.charAt(0).toUpperCase() + property.category.slice(1)}
-                                        </p>
-                                    </div>
-
                                     <div className="flex flex-wrap items-center gap-3 border-t border-orange-100 pt-4">
                                         <p className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[var(--primary)]">
                                             ₱ {Number(property.price).toLocaleString()}
@@ -121,8 +109,19 @@ function ViewDetails({ goBack, userRole, userId, property, showHeader = true, sh
                                         )}
                                     </div>
                                 </div>
-                                
+
                                 <div className="flex flex-col gap-5">
+                                    <div className="flex flex-col gap-1">
+                                        <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold text-[var(--text)]">{property.property_name}</h3>
+                                        <p className="flex items-center gap-2 text-sm text-gray-500">
+                                            <i className="fa-solid fa-location-dot text-[var(--primary)]" />
+                                            {property.address ? `${property.address}` : 'No address available'}
+                                        </p>
+                                        <p className="flex items-center gap-2 text-sm text-gray-500">
+                                            <i className="fa-solid fa-house text-[var(--primary)]" />
+                                            {property.category.charAt(0).toUpperCase() + property.category.slice(1)}
+                                        </p>
+                                    </div>
                                     <div className="flex flex-col gap-1.5">
                                         <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Description</p>
                                         <p className="text-sm leading-relaxed text-gray-600">{property.description ? `${property.description}` : 'No description available'}</p>
@@ -213,7 +212,7 @@ function ViewDetails({ goBack, userRole, userId, property, showHeader = true, sh
                             </div>
                         
                             {showActions && (
-                                <div className="flex flex-wrap gap-3">
+                                <div className="flex w-full flex-wrap justify-end gap-3">
                                     {userRole === 'tenant' && (
                                         <>
                                             {property.status === 'available' && (
@@ -294,7 +293,7 @@ function ViewDetails({ goBack, userRole, userId, property, showHeader = true, sh
 
                                     <button
                                         onClick={goBack}
-                                        className="inline-flex cursor-pointer items-center justify-center gap-2 ml-auto rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                                        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
                                     >
                                         <i className="fa-solid fa-arrow-left" />
                                         Go Back

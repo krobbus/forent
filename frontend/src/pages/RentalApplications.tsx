@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { authFetch } from '../utils/api';
-import type { RentalApplicationsProps, RentalApplicationDataProps } from '../utils/props'
+import type { RentalApplicationsProps, RentalApplicationDataProps, ApplicationStatus } from '../utils/props'
 import ApplyRental from './ApplyRental';
 
 function RentalApplications({ goBack, userId, userRole, onViewDetails }: RentalApplicationsProps) {
@@ -116,73 +116,152 @@ function RentalApplications({ goBack, userId, userRole, onViewDetails }: RentalA
         }
     };
 
+    const getStatusColor = (status: ApplicationStatus) => {
+        switch (status) {
+            case 'pending': return 'bg-amber-50 text-amber-700';
+            case 'approved': return 'bg-emerald-50 text-emerald-700';
+            case 'rejected': return 'bg-red-50 text-red-600';
+            case 'withdrawn': return 'bg-gray-100 text-gray-600';
+            default: return 'bg-gray-100 text-gray-600';
+        }
+    };
+
+    const getStatusLabel = (status: ApplicationStatus) => {
+        if (!status) return '—';
+        return status.charAt(0).toUpperCase() + status.slice(1);
+    };
+
     return (
-        <section id='rentalApplicationsContainer'>
-            <header>
-                <h2>{userRole === 'landlord' ? 'Manage Applications' : 'My Applications'}</h2>
-                <p>
-                    {userRole === 'landlord' 
-                        ? 'Review potential tenants for your properties.' 
-                        : 'Track the status of your rental requests.'
-                    }
-                </p>
+        <section id='rentalApplicationsContainer' className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 font-[family-name:var(--font-body)] text-[var(--text)] sm:px-6">
+            <header className="relative overflow-hidden rounded-2xl bg-[url('/Background.png')] bg-cover bg-center">
+                <div className="absolute inset-0 bg-orange-600/70" />
+
+                <div className="relative flex flex-col gap-2 px-6 py-10 sm:px-10">
+                    <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-white sm:text-3xl">{userRole === 'landlord' ? 'Manage Applications' : 'My Applications'}</h2>
+                    <p className="max-w-2xl text-sm text-orange-50 sm:text-base">
+                        {userRole === 'landlord' 
+                            ? 'Review potential tenants for your properties.' 
+                            : 'Track the status of your rental requests.'
+                        }
+                    </p>
+                </div>
             </header>
 
-            <main className="appGrid">
+            <main className="flex flex-col gap-6">
                 {loading ? (
-                    <p className='loadingText'>Loading applications...</p>
+                    <p className="py-12 text-center text-sm text-gray-500">Loading applications...</p>
                 ) : applications.length === 0 ? (
-                    <p className='loadingText'>No applications found.</p>
+                    <p className="py-12 text-center text-sm text-gray-500">No applications found.</p>
                 ) : (
-                    <div className='tableWrapper'>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Application ID</th>
-                                    <th>Property Name</th>
-                                    <th>Applicant Name</th>
-                                    <th>Applicant Contact</th>
-                                    <th>Applicant Email</th>
-                                    <th>Date Applied</th>
-                                    <th>Status</th>
-                                    {userRole === 'landlord' && <th>Message</th>}
-                                    <th>Actions</th>
+                    <div className="overflow-x-auto rounded-2xl border border-orange-100 bg-white shadow-sm">
+                        <table className="w-full min-w-[1100px] border-collapse text-left text-sm">
+                            <thead className="bg-[var(--primary-soft)]">
+                                <tr className="border-b border-orange-100">
+                                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Application ID</th>
+                                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Property Name</th>
+                                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Applicant Name</th>
+                                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Applicant Contact</th>
+                                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Applicant Email</th>
+                                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Move-in Date</th>
+                                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Status</th>
+                                    {userRole === 'landlord' && <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Message</th>}
+                                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[var(--primary-dark)]">Actions</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 {applications.map((app, index) => (
-                                    <tr key={app.id}>
-                                        <td>{index + 1}</td>
-                                        <td>{app.property_name || '—'}</td>
-                                        <td>{app.tenant_fullname || '—'}</td>
-                                        <td>{app.tenant_contact || '—'}</td>
-                                        <td>{app.tenant_email || '—'}</td>
-                                        <td>{new Date(app.move_in_date || '—').toLocaleDateString()}</td>
-                                        <td>
-                                            <span className={`statusBadge ${app.status}`}>{app.status.charAt(0).toUpperCase() + app.status.slice(1) || '—'}</span>
+                                    <tr key={app.id} className="border-b border-orange-100 align-top transition-colors last:border-b-0 hover:bg-[var(--primary-soft)]/50">
+                                        <td className="px-4 py-3 font-semibold text-[var(--text)]">{index + 1}</td>
+                                        <td className="px-4 py-3 font-medium text-[var(--text)]">{app.property_name || '—'}</td>
+                                        <td className="px-4 py-3 text-gray-600">{app.tenant_fullname || '—'}</td>
+                                        <td className="whitespace-nowrap px-4 py-3 text-gray-600">{app.tenant_contact || '—'}</td>
+                                        <td className="px-4 py-3 text-gray-600">{app.tenant_email || '—'}</td>
+                                        <td className="whitespace-nowrap px-4 py-3 text-gray-600">{app.move_in_date ? new Date(app.move_in_date).toLocaleDateString() : '—'}</td>
+                                        <td className="px-4 py-3">
+                                            <span className={`inline-block whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${getStatusColor(app.status)}`}>
+                                                {getStatusLabel(app.status)}
+                                            </span>
                                         </td>
-                                        {userRole === 'landlord' && <td>{!app.message ? "No message from applicant." : app.message }</td>}
-                                        <td>
+                                        {userRole === 'landlord' && (
+                                            <td className="max-w-xs px-4 py-3 leading-relaxed text-gray-600">
+                                                {!app.message ? "No message from applicant." : app.message}
+                                            </td>
+                                        )}
+                                        <td className="px-4 py-3">
                                             {app.status === 'pending' ? (
                                                 userRole === 'landlord' ? (
-                                                    <div className="actionBtnWrapper">
-                                                        <button className='viewBtn' onClick={() => handleViewDetails(app.property_id)}>View Property</button>
-                                                        <button className="approveBtn" onClick={() => handleStatusUpdate(app.id, 'approved')}>Mark Approve</button>
-                                                        <button className="rejectBtn" onClick={() => handleStatusUpdate(app.id, 'rejected')}>Mark Reject</button>
-                                                        <button className="deleteBtn" onClick={() => handleDeleteApplication(app.id)}>Delete Application</button>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        <button
+                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-[var(--primary)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                                            onClick={() => handleViewDetails(app.property_id)}
+                                                        >
+                                                            <i className="fa-solid fa-eye" />
+                                                            View Property
+                                                        </button>
+                                                        <button
+                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)]"
+                                                            onClick={() => handleStatusUpdate(app.id, 'approved')}
+                                                        >
+                                                            <i className="fa-solid fa-check" />
+                                                            Mark Approve
+                                                        </button>
+                                                        <button
+                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                                                            onClick={() => handleStatusUpdate(app.id, 'rejected')}
+                                                        >
+                                                            <i className="fa-solid fa-ban" />
+                                                            Mark Reject
+                                                        </button>
+                                                        <button
+                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-red-500 bg-white px-3 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50"
+                                                            onClick={() => handleDeleteApplication(app.id)}
+                                                        >
+                                                            <i className="fa-solid fa-trash" />
+                                                            Delete Application
+                                                        </button>
                                                     </div>
                                                 ) : (
-                                                    <div className="actionBtnWrapper">
-                                                        <button className='viewBtn' onClick={() => handleViewDetails(app.property_id)}>View Property</button>
-                                                        <button className="updateBtn" onClick={() => handleEditApplication(app)}>Update Details</button>
-                                                        <button className="deleteBtn" onClick={() => handleDeleteApplication(app.id)}>Delete Application</button>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        <button
+                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-[var(--primary)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                                            onClick={() => handleViewDetails(app.property_id)}
+                                                        >
+                                                            <i className="fa-solid fa-eye" />
+                                                            View Property
+                                                        </button>
+                                                        <button
+                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)]"
+                                                            onClick={() => handleEditApplication(app)}
+                                                        >
+                                                            <i className="fa-solid fa-pen-to-square" />
+                                                            Update Details
+                                                        </button>
+                                                        <button
+                                                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-red-500 bg-white px-3 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50"
+                                                            onClick={() => handleDeleteApplication(app.id)}
+                                                        >
+                                                            <i className="fa-solid fa-trash" />
+                                                            Delete Application
+                                                        </button>
                                                     </div>
                                                 )
                                             ) : app.status === 'approved' || app.status === 'rejected' || app.status === 'withdrawn' ? (
-                                                <div className="actionBtnWrapper">
-                                                    <button className='viewBtn' onClick={() => handleViewDetails(app.property_id)}>View Property</button>
-                                                    <button className="deleteBtn" onClick={() => handleDeleteApplication(app.id)}>Delete Application</button>
+                                                <div className="flex flex-wrap gap-2">
+                                                    <button
+                                                        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-[var(--primary)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--primary)] transition-colors hover:bg-[var(--primary-soft)]"
+                                                        onClick={() => handleViewDetails(app.property_id)}
+                                                    >
+                                                        <i className="fa-solid fa-eye" />
+                                                        View Property
+                                                    </button>
+                                                    <button
+                                                        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-red-500 bg-white px-3 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50"
+                                                        onClick={() => handleDeleteApplication(app.id)}
+                                                    >
+                                                        <i className="fa-solid fa-trash" />
+                                                        Delete Application
+                                                    </button>
                                                 </div>
                                             ) : null}
                                         </td>
@@ -193,8 +272,15 @@ function RentalApplications({ goBack, userId, userRole, onViewDetails }: RentalA
                     </div>
                 )}
 
-                <div className="btnWrapper">
-                    <button type="button" className="backBtn" onClick={goBack}>Go Back</button>
+                <div className="flex flex-wrap justify-end gap-3">
+                    <button
+                        type="button"
+                        onClick={goBack}
+                        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                    >
+                        <i className="fa-solid fa-arrow-left" />
+                        Go Back
+                    </button>
                 </div>
             </main>
         </section>

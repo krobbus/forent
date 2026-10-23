@@ -239,8 +239,16 @@ function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onVie
                                             </div>
                                         </section>
 
-                                        <section className="mt-auto flex flex-wrap gap-2 border-t border-orange-200 pt-4">
-                                            {userRole === 'tenant' ? (
+                                        <section className="mt-auto flex flex-wrap justify-end gap-2 border-t border-orange-200 pt-4">
+                                            {userRole === 'landlord' ? (
+                                                <button
+                                                    onClick={() => onUpdateProperty(p)}
+                                                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                                                >
+                                                    <i className="fa-solid fa-pen-to-square" />
+                                                    Update Details
+                                                </button>
+                                            ) : (
                                                 p.status === 'available' ? (
                                                     <>
                                                         {applications.some(app => app.property_id === p.id) ? (
@@ -270,14 +278,6 @@ function Marketplace({ userId, userRole, onViewDetails, onViewApplyRental, onVie
                                                         Currently Occupied
                                                     </button>
                                                 )
-                                            ) : (
-                                                <button
-                                                    onClick={() => onUpdateProperty(p)}
-                                                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
-                                                >
-                                                    <i className="fa-solid fa-pen-to-square" />
-                                                    Update Details
-                                                </button>
                                             )}
 
                                             <button
