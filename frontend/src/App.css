@@ -6,17 +6,35 @@
     --primary-soft: #fff7ed;
     --text: #1f2937;
     --muted: #6b7280;
-    --font-heading: 'Sora', sans-serif;
-    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
 }
 
 @layer base {
     * { user-select: none; }
     input, textarea { user-select: text; }
 
+    html {
+        font-family: var(--font-body);
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
     body {
+        min-width: 320px;
+        margin: 0;
         background: #ffffff;
         color: var(--text);
         font-family: var(--font-body);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+    }
+
+    button, input, select, textarea {
+        font: inherit;
     }
 }
