@@ -85,13 +85,13 @@ function PropertyGallery({ images, variant = 'card' }: { images: string[], varia
     if (variant === 'details') {
         return (
             <>
-                <div className="grid grid-cols-[72px_1fr] gap-3 sm:grid-cols-[88px_1fr]">
-                    <div className="flex max-h-[420px] flex-col gap-2 overflow-y-auto">
+                <div className="grid grid-rows-[72px_1fr] gap-3 sm:grid-rows-[88px_1fr]">
+                    <div className="flex max-w-[720px] flex gap-2 overflow-x-auto">
                         {images.map((img, i) => (
                             <div
                                 key={i}
                                 onClick={() => setActiveIndex(i)}
-                                className={`h-16 w-full shrink-0 cursor-pointer overflow-hidden rounded-lg border-2 transition-all sm:h-20 ${i === activeIndex ? 'border-[var(--primary)]' : 'border-transparent opacity-70 hover:opacity-100'}`}
+                                className={`max-h-16 max-w-26 w-full shrink-0 cursor-pointer overflow-hidden rounded-lg border-2 transition-all sm:h-20 ${i === activeIndex ? 'border-[var(--primary)]' : 'border-transparent opacity-70 hover:opacity-100'}`}
                             >
                                 <img src={img} alt={`Thumb ${i + 1}`} className="h-full w-full object-cover" />
                             </div>
