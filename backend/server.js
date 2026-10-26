@@ -9,8 +9,7 @@ const allowedOrigins = [
     'http://localhost:5173', 'https://localhost:5173',
     'http://127.0.0.1:5173', 'https://127.0.0.1:5173',
     'https://forent-rental.vercel.app',
-    process.env.FRONTEND_URL,
-    process.env.BACKEND_URL
+    'https://forent-backend.onrender.com'
 ].filter(Boolean).map(url => url.replace(/\/+$/, ''));
 
 const pattern = /^forent(-[a-z0-9-]+)?-krobbus-projects\.vercel\.app$/;
